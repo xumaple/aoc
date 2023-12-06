@@ -1,9 +1,7 @@
-use std::fs::File;
-use std::io::{self, BufRead, BufReader, Lines};
 use std::ops::Deref;
-use std::path::Path;
+use util::*;
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+fn run(filename: &str) -> Result<i32, BoxError> {
     let mappings = vec![
         ("1".as_bytes(), 1),
         ("2".as_bytes(), 2),
@@ -45,15 +43,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         ("enin".as_bytes(), 9),
     ];
     let mut sum = 0;
-    for l in read_lines("src/01/input.txt")? {
+    for l in read_lines(filename)? {
         let l = l?;
         let i1 = find_multiple_inputs(l.as_bytes().iter(), &mappings);
         let i2 = find_multiple_inputs(l.as_bytes().iter().rev(), &rmappings);
         sum += 10 * i1 + i2;
     }
 
-    println!("{sum}");
-    Ok(())
+    Ok(sum)
 }
 
 fn find_multiple_inputs<T>(input_iter: T, mappings: &Vec<(&[u8], i32)>) -> i32
@@ -71,9 +68,7 @@ where
                     return *val;
                 }
             } else {
-                *tc_i = if *c == m_i[0] {
-                    1
-                } else { 0 }
+                *tc_i = if *c == m_i[0] { 1 } else { 0 }
             }
         }
     }
@@ -81,10 +76,17 @@ where
     panic!("Didn't find anything...");
 }
 
-fn read_lines<P>(filename: P) -> io::Result<Lines<BufReader<File>>>
-where
-    P: AsRef<Path>,
-{
-    let file = File::open(filename)?;
-    Ok(BufReader::new(file).lines())
+fn main() -> NulBoxError {
+    println!("{}", run("src/01/input.txt")?);
+    Ok(())
+}
+
+#[cfg(test)]
+mod test_01b {
+    use super::run;
+
+    #[test]
+    fn official() {
+        assert_eq!(run("src/01/input.txt").unwrap(), 54728)
+    }
 }

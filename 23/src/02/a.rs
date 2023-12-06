@@ -1,16 +1,14 @@
 use std::collections::HashMap;
-use std::fs::File;
-use std::io::{self, BufRead, BufReader, Lines};
-use std::path::Path;
+use util::*;
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+fn run(filename: &str) -> Result<i32, BoxError> {
     let maxes: HashMap<_, _> = [("red", 12), ("green", 13), ("blue", 14)]
         .iter()
         .cloned()
         .collect();
 
     let mut sum = 0;
-    for l in read_lines("src/02/input.txt")? {
+    for l in read_lines(filename)? {
         let l = l?;
         let (game_num_str, hands) = l.split_once(": ").expect("Did not find ':' in game line");
         let game_num: i32 = unsafe { game_num_str.get_unchecked(5..) }.parse()?;
@@ -21,11 +19,17 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         for token in hands.split(" ") {
             match on_num {
                 true => {
-                    prev_num = token.parse::<i32>().expect(format!("Unable to parse int: {token}").as_str());
+                    prev_num = token
+                        .parse::<i32>()
+                        .expect(format!("Unable to parse int: {token}").as_str());
                     on_num = false;
                 }
                 false => {
-                    if prev_num > *maxes.get(&token.trim_end_matches(&[',', ';'])).expect(format!("Unable to identify color {token}").as_str()) {
+                    if prev_num
+                        > *maxes
+                            .get(&token.trim_end_matches(&[',', ';']))
+                            .expect(format!("Unable to identify color {token}").as_str())
+                    {
                         game_success = false;
                         break;
                     }
@@ -37,14 +41,20 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             sum += game_num;
         }
     }
-    println!("{sum}");
+    Ok(sum)
+}
+
+fn main() -> NulBoxError {
+    println!("{}", run("src/02/input.txt")?);
     Ok(())
 }
 
-fn read_lines<P>(filename: P) -> io::Result<Lines<BufReader<File>>>
-where
-    P: AsRef<Path>,
-{
-    let file = File::open(filename)?;
-    Ok(BufReader::new(file).lines())
+#[cfg(test)]
+mod test_02a {
+    use super::run;
+
+    #[test]
+    fn official() {
+        assert_eq!(run("src/02/input.txt").unwrap(), 2476)
+    }
 }

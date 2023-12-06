@@ -1,7 +1,4 @@
-use std::error::Error;
-use std::fs::File;
-use std::io::{self, BufRead, BufReader, Lines};
-use std::path::Path;
+use util::*;
 
 fn exists(sorted_list: &Vec<usize>, min_val: usize, max_val: usize) -> bool {
     for &x in sorted_list {
@@ -17,8 +14,7 @@ fn exists(sorted_list: &Vec<usize>, min_val: usize, max_val: usize) -> bool {
     return false;
 }
 
-fn main() -> Result<(), Box<dyn Error>> {
-    let filename = "src/03/input.txt";
+fn run(filename: &str) -> Result<i32, BoxError> {
     let symbol_locs: Vec<_> = read_lines(filename)?
         .into_iter()
         .map(|line| {
@@ -33,7 +29,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                 })
                 .collect::<Vec<usize>>())
         })
-        .collect::<Result<Vec<_>, Box<dyn Error>>>()?;
+        .collect::<Result<Vec<_>, BoxError>>()?;
     let sum: i32 = read_lines(filename)?
         .into_iter()
         .enumerate()
@@ -45,12 +41,11 @@ fn main() -> Result<(), Box<dyn Error>> {
                     // Search for symbol locations that match
                     let min_val = match curr_x {
                         0 => 0,
-                        _ => curr_x - 1
+                        _ => curr_x - 1,
                     };
                     let max_val = curr_x + num_str.len();
                     if exists(&symbol_locs[curr_y], min_val, max_val)
-                        || (curr_y > 0
-                            && exists(&symbol_locs[curr_y - 1], min_val, max_val))
+                        || (curr_y > 0 && exists(&symbol_locs[curr_y - 1], min_val, max_val))
                         || (curr_y < symbol_locs.len() - 1
                             && exists(&symbol_locs[curr_y + 1], min_val, max_val))
                     {
@@ -61,18 +56,24 @@ fn main() -> Result<(), Box<dyn Error>> {
             }
             Ok(line_sum)
         })
-        .collect::<Result<Vec<i32>, Box<dyn Error>>>()?
+        .collect::<Result<Vec<i32>, BoxError>>()?
         .iter()
         .sum();
     // println!("{:?}", symbol_locs);
-    println!("{sum}");
+    Ok(sum)
+}
+
+fn main() -> NulBoxError {
+    println!("{}", run("src/03/input.txt")?);
     Ok(())
 }
 
-fn read_lines<P>(filename: P) -> io::Result<Lines<BufReader<File>>>
-where
-    P: AsRef<Path>,
-{
-    let file = File::open(filename)?;
-    Ok(BufReader::new(file).lines())
+#[cfg(test)]
+mod test_03ba {
+    use super::run;
+
+    #[test]
+    fn official() {
+        assert_eq!(run("src/03/input.txt").unwrap(), 530495)
+    }
 }

@@ -6,6 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+util = { path = "./util" }
 
 [[bin]]
 name = "01a"
@@ -30,3 +31,9 @@ path = "src/03/a.rs"
 [[bin]]
 name = "03b"
 path = "src/03/b.rs"
+
+[workspace]
+
+members = [
+    "util",
+]

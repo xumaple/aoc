@@ -1,7 +1,4 @@
-use std::error::Error;
-use std::fs::File;
-use std::io::{self, BufRead, BufReader, Lines};
-use std::path::Path;
+use util::*;
 
 fn adjust_gear(sorted_list: &mut Vec<Gear>, adjustment: i32, min_val: usize, max_val: usize) {
     for g in sorted_list.iter_mut() {
@@ -47,8 +44,7 @@ impl Gear {
     }
 }
 
-fn main() -> Result<(), Box<dyn Error>> {
-    let filename = "src/03/input.txt";
+fn run(filename: &str) -> Result<i32, BoxError> {
     let mut symbol_locs: Vec<_> = read_lines(filename)?
         .into_iter()
         .map(|line| {
@@ -57,7 +53,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                 .filter_map(|(i, c)| if c == '*' { Some(Gear::new(i)) } else { None })
                 .collect::<Vec<Gear>>())
         })
-        .collect::<Result<Vec<_>, Box<dyn Error>>>()?;
+        .collect::<Result<Vec<_>, BoxError>>()?;
 
     for (curr_y, line) in read_lines(filename)?.into_iter().enumerate() {
         let mut curr_x = 0;
@@ -86,14 +82,20 @@ fn main() -> Result<(), Box<dyn Error>> {
         .iter()
         .map(|gears| gears.iter().map(|gear| gear.gear_ratio()).sum::<i32>())
         .sum();
-    println!("{sum}");
+    Ok(sum)
+}
+
+fn main() -> NulBoxError {
+    println!("{}", run("src/03/input.txt")?);
     Ok(())
 }
 
-fn read_lines<P>(filename: P) -> io::Result<Lines<BufReader<File>>>
-where
-    P: AsRef<Path>,
-{
-    let file = File::open(filename)?;
-    Ok(BufReader::new(file).lines())
+#[cfg(test)]
+mod test_03b {
+    use super::run;
+
+    #[test]
+    fn official() {
+        assert_eq!(run("src/03/input.txt").unwrap(), 80253814)
+    }
 }
