@@ -1,7 +1,9 @@
 [package]
 name = "advent23"
+authors = ["Maple Xu <xumaple@umich.edu>"]
 version = "0.1.0"
 edition = "2021"
+default-run = "advent23"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -35,5 +37,11 @@ path = "src/d03/b.rs"
 [workspace]
 
 members = [
+    ".",
+    "util",
+]
+
+default-members = [
+    ".",
     "util",
 ]

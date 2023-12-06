@@ -1,7 +1,7 @@
 use std::ops::Deref;
 use util::*;
 
-fn run(filename: &str) -> Result<i32, BoxError> {
+pub fn run(filename: &str) -> Result<i32, BoxError> {
     let mappings = vec![
         ("1".as_bytes(), 1),
         ("2".as_bytes(), 2),
@@ -76,6 +76,7 @@ where
     panic!("Didn't find anything...");
 }
 
+#[allow(dead_code)]
 fn main() -> NulBoxError {
     println!("{}", run("src/d01/input.txt")?);
     Ok(())

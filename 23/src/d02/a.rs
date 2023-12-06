@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use util::*;
 
-fn run(filename: &str) -> Result<i32, BoxError> {
+pub fn run(filename: &str) -> Result<i32, BoxError> {
     let maxes: HashMap<_, _> = [("red", 12), ("green", 13), ("blue", 14)]
         .iter()
         .cloned()
@@ -44,6 +44,7 @@ fn run(filename: &str) -> Result<i32, BoxError> {
     Ok(sum)
 }
 
+#[allow(dead_code)]
 fn main() -> NulBoxError {
     println!("{}", run("src/d02/input.txt")?);
     Ok(())

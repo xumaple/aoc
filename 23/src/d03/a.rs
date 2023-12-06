@@ -14,7 +14,7 @@ fn exists(sorted_list: &Vec<usize>, min_val: usize, max_val: usize) -> bool {
     return false;
 }
 
-fn run(filename: &str) -> Result<i32, BoxError> {
+pub fn run(filename: &str) -> Result<i32, BoxError> {
     let symbol_locs: Vec<_> = read_lines(filename)?
         .into_iter()
         .map(|line| {
@@ -63,6 +63,7 @@ fn run(filename: &str) -> Result<i32, BoxError> {
     Ok(sum)
 }
 
+#[allow(dead_code)]
 fn main() -> NulBoxError {
     println!("{}", run("src/d03/input.txt")?);
     Ok(())

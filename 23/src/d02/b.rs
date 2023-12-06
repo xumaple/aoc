@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use util::*;
 
-fn run(filename: &str) -> Result<i32, BoxError> {
+pub fn run(filename: &str) -> Result<i32, BoxError> {
     let mut sum = 0;
     for l in read_lines(filename)? {
         let l = l?;
@@ -37,6 +37,7 @@ fn run(filename: &str) -> Result<i32, BoxError> {
     Ok(sum)
 }
 
+#[allow(dead_code)]
 fn main() -> NulBoxError {
     println!("{}", run("src/d02/input.txt")?);
     Ok(())

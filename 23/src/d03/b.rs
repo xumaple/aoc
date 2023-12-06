@@ -44,7 +44,7 @@ impl Gear {
     }
 }
 
-fn run(filename: &str) -> Result<i32, BoxError> {
+pub fn run(filename: &str) -> Result<i32, BoxError> {
     let mut symbol_locs: Vec<_> = read_lines(filename)?
         .into_iter()
         .map(|line| {
@@ -85,6 +85,7 @@ fn run(filename: &str) -> Result<i32, BoxError> {
     Ok(sum)
 }
 
+#[allow(dead_code)]
 fn main() -> NulBoxError {
     println!("{}", run("src/d03/input.txt")?);
     Ok(())
