@@ -6,16 +6,16 @@ pub fn run(filename: &str) -> Result<i32, BoxError> {
 
 #[allow(dead_code)]
 fn main() -> NulBoxError {
-    println!("{}", run("src/d04/input.txt")?);
+    println!("{}", run("src/d00/input.txt")?);
     Ok(())
 }
 
 #[cfg(test)]
-mod test_04b {
+mod test_a {
     use super::run;
 
     #[test]
     fn sample() {
-        assert_eq!(run("src/d04/sample.txt").unwrap(), 0)
+        assert_eq!(run("src/d00/sample.txt").unwrap(), 0);
     }
 }
