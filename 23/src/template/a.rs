@@ -18,4 +18,9 @@ mod test_a {
     fn sample() {
         assert_eq!(run("src/d00/sample.txt").unwrap(), 0);
     }
+
+    // #[test]
+    // fn offical() {
+    //     assert_eq!(run("src/d00/input.txt").unwrap(), 0);
+    // }
 }

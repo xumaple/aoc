@@ -34,6 +34,15 @@ path = "src/d03/a.rs"
 name = "03b"
 path = "src/d03/b.rs"
 
+[[bin]]
+name = "04a"
+path = "src/d04/a.rs"
+
+[[bin]]
+name = "04b"
+path = "src/d04/b.rs"
+
+
 [workspace]
 
 members = [
