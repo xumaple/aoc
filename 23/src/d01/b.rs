@@ -77,7 +77,7 @@ where
 }
 
 fn main() -> NulBoxError {
-    println!("{}", run("src/01/input.txt")?);
+    println!("{}", run("src/d01/input.txt")?);
     Ok(())
 }
 
@@ -87,6 +87,6 @@ mod test_01b {
 
     #[test]
     fn official() {
-        assert_eq!(run("src/01/input.txt").unwrap(), 54728)
+        assert_eq!(run("src/d01/input.txt").unwrap(), 54728)
     }
 }

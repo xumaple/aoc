@@ -10,27 +10,27 @@ util = { path = "./util" }
 
 [[bin]]
 name = "01a"
-path = "src/01/a.rs"
+path = "src/d01/a.rs"
 
 [[bin]]
 name = "01b"
-path = "src/01/b.rs"
+path = "src/d01/b.rs"
 
 [[bin]]
 name = "02a"
-path = "src/02/a.rs"
+path = "src/d02/a.rs"
 
 [[bin]]
 name = "02b"
-path = "src/02/b.rs"
+path = "src/d02/b.rs"
 
 [[bin]]
 name = "03a"
-path = "src/03/a.rs"
+path = "src/d03/a.rs"
 
 [[bin]]
 name = "03b"
-path = "src/03/b.rs"
+path = "src/d03/b.rs"
 
 [workspace]
 

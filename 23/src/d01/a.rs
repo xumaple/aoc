@@ -13,7 +13,7 @@ fn run(filename: &str) -> Result<i32, BoxError> {
 }
 
 fn main() -> NulBoxError {
-    println!("{}", run("src/01/input.txt")?);
+    println!("{}", run("src/d01/input.txt")?);
     Ok(())
 }
 
@@ -23,6 +23,6 @@ mod test_01a {
 
     #[test]
     fn official() {
-        assert_eq!(run("src/01/input.txt").unwrap(), 54916)
+        assert_eq!(run("src/d01/input.txt").unwrap(), 54916)
     }
 }
