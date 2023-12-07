@@ -7,6 +7,7 @@ mod d02;
 mod d03;
 mod d04;
 mod d05;
+mod d06;
 mod d07;
 
 fn main() -> NulBoxError {
@@ -35,6 +36,11 @@ fn main() -> NulBoxError {
         "  Day 5 -  A: {} ; B: {}",
         d05::a::run("src/d05/input.txt")?,
         d05::b::run("src/d05/input.txt")?
+    );
+    println!(
+        "  Day 6 -  A: {} ; B: {}",
+        d06::a::run("src/d06/input.txt")?,
+        d06::b::run("src/d06/input.txt")?
     );
     println!(
         "  Day 7 -  A: {} ; B: {}",

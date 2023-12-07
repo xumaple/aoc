@@ -4,7 +4,7 @@ mod shared;
 use shared::*;
 use itertools::Itertools;
 
-pub fn run(filename: &str) -> Result<i32, BoxError> {
+pub fn run(filename: &str) -> Result<IntType, BoxError> {
     Ok(0)
 }
 
