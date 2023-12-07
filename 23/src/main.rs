@@ -47,6 +47,11 @@ fn main() -> NulBoxError {
         d07::a::run("src/d07/input.txt")?,
         d07::b::run("src/d07/input.txt")?
     );
+    println!(
+        "  Day 8 -  A: {} ; B: {}",
+        d07::a::run("src/d08/input.txt")?,
+        d07::b::run("src/d08/input.txt")?
+    );
 
     Ok(())
 }
