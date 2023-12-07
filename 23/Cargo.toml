@@ -63,6 +63,7 @@ path = "src/d06/b.rs"
 name = "07a"
 path = "src/d07/a.rs"
 
+
 [[bin]]
 name = "07b"
 path = "src/d07/b.rs"
@@ -78,11 +79,13 @@ path = "src/d08/b.rs"
 [workspace]
 
 members = [
-    ".",
+    ".", 
+    "aoc-proc",
     "util",
 ]
 
 default-members = [
     ".",
+    "aoc-proc",
     "util",
 ]

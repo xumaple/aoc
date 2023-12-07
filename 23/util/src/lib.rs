@@ -9,6 +9,7 @@ pub use std::cmp::{Eq, Ord, Ordering, PartialEq, PartialOrd};
 pub use std::fmt::Debug;
 pub use std::ops::Range;
 
+pub mod aoc;
 pub mod error;
 pub use error::*;
 pub mod string;

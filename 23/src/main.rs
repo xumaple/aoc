@@ -1,6 +1,7 @@
 #![feature(iter_array_chunks)]
 
 use util::NulBoxError;
+use util::aoc::*;
 
 mod d01;
 mod d02;
@@ -9,6 +10,19 @@ mod d04;
 mod d05;
 mod d06;
 mod d07;
+
+fn run_day(day: Day) {
+    match Day {
+        Day::D01 => d01,
+        Day::D02 => d02,
+        Day::D03 => d03,
+        Day::D04 => d04,
+        Day::D05 => d05,
+        Day::D06 => d06,
+        Day::D07 => d07,
+        _ => unimplemented!()
+    }::a::run("src/d01/input.txt");
+}
 
 fn main() -> NulBoxError {
     println!("AoC 2023 Results:");
