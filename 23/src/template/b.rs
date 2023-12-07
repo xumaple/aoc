@@ -1,4 +1,8 @@
 use util::*;
+#[path = "./shared.rs"]
+mod shared;
+use shared::*;
+use itertools::Itertools;
 
 pub fn run(filename: &str) -> Result<i32, BoxError> {
     Ok(0)

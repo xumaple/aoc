@@ -9,6 +9,7 @@ default-run = "advent23"
 
 [dependencies]
 util = { path = "./util" }
+itertools = "0.12"
 
 [[bin]]
 name = "01a"
@@ -42,6 +43,21 @@ path = "src/d04/a.rs"
 name = "04b"
 path = "src/d04/b.rs"
 
+[[bin]]
+name = "05a"
+path = "src/d05/a.rs"
+
+[[bin]]
+name = "05b"
+path = "src/d05/b.rs"
+
+[[bin]]
+name = "07a"
+path = "src/d07/a.rs"
+
+[[bin]]
+name = "07b"
+path = "src/d07/b.rs"
 
 [workspace]
 

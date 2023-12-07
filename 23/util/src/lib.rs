@@ -35,9 +35,10 @@ where
         match input.as_ref().parse::<S>() {
             Ok(v) => v,
             Err(_) => panic!(
-                "Unable to parse string value: {} from type: {}",
+                "Unable to parse value: {} from type: {} to type: {}",
                 input.as_ref(),
-                type_name::<T>()
+                type_name::<T>(),
+                type_name::<S>(),
             ),
         }
     }

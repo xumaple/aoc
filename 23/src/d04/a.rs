@@ -1,5 +1,5 @@
-use util::*;
 use std::collections::HashSet;
+use util::*;
 
 struct Card {
     winning: HashSet<i32>,
@@ -19,7 +19,7 @@ impl Card {
         match self.to_check.intersection(&self.winning).count() {
             0 => 0,
             n => {
-                let n: u32 = (n-1).uinton();
+                let n: u32 = (n - 1).uinton();
                 2_i32.pow(n)
             }
         }
@@ -30,11 +30,7 @@ pub fn run(filename: &str) -> Result<i32, BoxError> {
     let sum = read_lines(filename)?
         .into_iter()
         .map(|line| {
-            let c = Card::new(
-                line?
-                    .ssplit_once(": ")
-                    .1,
-            );
+            let c = Card::new(line?.ssplit_once(": ").1);
             Ok(c.get_score())
         })
         .collect::<Result<Vec<i32>, BoxError>>()?
