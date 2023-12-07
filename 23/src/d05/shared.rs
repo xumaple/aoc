@@ -16,6 +16,7 @@ impl Mapping {
             .insert(mapping[1]..mapping[1] + mapping[2], mapping[0] - mapping[1]);
     }
 
+    #[allow(dead_code)] // not sure why I need this
     pub fn get_map(&self, input: i64) -> i64 {
         for (range, diff) in self.0.iter() {
             if range.contains(&input) {
@@ -25,10 +26,10 @@ impl Mapping {
         return input;
     }
 
+    #[allow(dead_code)] // not sure why I need this
     pub fn get_map_range(&self, ranges: Vec<Range<i64>>) -> Vec<Range<i64>> {
         ranges.iter().fold(Vec::new(), |mut new_ranges, seed_r| {
             let mut temp_r = vec![seed_r.clone()];
-            // let mut i = 0;
             while let Some(seed_r) = temp_r.pop() {
                 assert_range(seed_r.clone());
                 let mut touched = false;
@@ -36,10 +37,10 @@ impl Mapping {
                     let mut new_push = |r: Range<i64>| {
                         new_ranges.push(r.start + diff..r.end + diff);
                     };
-                    let mss = map_r.start <= seed_r.start && map_r.end > seed_r.start;
-                    let mse = map_r.start <= seed_r.end - 1 && map_r.end > seed_r.end - 1;
-                    let sms = seed_r.start <= map_r.start && seed_r.end > map_r.start;
-                    let sme = seed_r.start <= map_r.end - 1 && seed_r.end > map_r.end - 1;
+                    let mss = map_r.contains(&seed_r.start);
+                    let mse = map_r.contains(&(seed_r.end - 1));
+                    let sms = seed_r.contains(&map_r.start);
+                    let sme = seed_r.contains(&(map_r.end - 1));
                     if mss && mse {
                         // Entire seed_r was captured, can break
                         new_push(seed_r.start..seed_r.end);
