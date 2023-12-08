@@ -35,8 +35,7 @@ where
     fn ufromn(a: A) -> Self;
 }
 
-impl<A: Number, B: Number> UnsafeFromNum<A> for B
-{
+impl<A: Number, B: Number> UnsafeFromNum<A> for B {
     fn ufromn(a: A) -> B {
         match B::from(a.clone()) {
             Some(v) => v,

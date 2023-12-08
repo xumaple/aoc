@@ -1,5 +1,5 @@
-use util::*;
 use aoc_proc::aoc_run;
+use util::*;
 
 fn exists(sorted_list: &Vec<usize>, min_val: usize, max_val: usize) -> bool {
     for &x in sorted_list {
@@ -17,7 +17,9 @@ fn exists(sorted_list: &Vec<usize>, min_val: usize, max_val: usize) -> bool {
 
 #[aoc_run(03a)]
 pub fn run(input: impl AsRef<str>) -> Result<i32, BoxError> {
-    let symbol_locs: Vec<_> = input.as_ref().lines()
+    let symbol_locs: Vec<_> = input
+        .as_ref()
+        .lines()
         .into_iter()
         .map(|line| {
             Ok(line
@@ -32,7 +34,9 @@ pub fn run(input: impl AsRef<str>) -> Result<i32, BoxError> {
                 .collect::<Vec<usize>>())
         })
         .collect::<Result<Vec<_>, BoxError>>()?;
-    let sum: i32 = input.as_ref().lines()
+    let sum: i32 = input
+        .as_ref()
+        .lines()
         .into_iter()
         .enumerate()
         .map(|(curr_y, line)| {

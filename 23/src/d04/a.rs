@@ -1,6 +1,6 @@
+use aoc_proc::aoc_run;
 use std::collections::HashSet;
 use util::*;
-use aoc_proc::aoc_run;
 
 struct Card {
     winning: HashSet<i32>,
@@ -29,7 +29,9 @@ impl Card {
 
 #[aoc_run(04a)]
 pub fn run(input: impl AsRef<str>) -> Result<i32, BoxError> {
-    let sum = input.as_ref().lines()
+    let sum = input
+        .as_ref()
+        .lines()
         .into_iter()
         .map(|line| {
             let c = Card::new(line.ssplit_once(": ").1);

@@ -1,6 +1,6 @@
+use aoc_proc::aoc_run;
 use std::collections::HashMap;
 use util::*;
-use aoc_proc::aoc_run;
 
 #[aoc_run(02b)]
 pub fn run(input: impl AsRef<str>) -> Result<i32, BoxError> {

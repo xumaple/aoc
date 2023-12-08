@@ -9,6 +9,7 @@ pub fn run(input: impl AsRef<str>) -> Result<IntType, BoxError> {
     let ans = Race::new(
         times[10..].remove_whitespace().uinto(),
         distances[10..].remove_whitespace().uinto(),
-    ).curve_above_distance();
-    Ok(ans.end-ans.start)
+    )
+    .curve_above_distance();
+    Ok(ans.end - ans.start)
 }

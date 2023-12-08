@@ -1,6 +1,6 @@
+use aoc_proc::aoc_run;
 use std::ops::Deref;
 use util::*;
-use aoc_proc::aoc_run;
 
 #[aoc_run(01b)]
 pub fn run(input: impl AsRef<str>) -> Result<i32, BoxError> {

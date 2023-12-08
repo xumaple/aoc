@@ -129,7 +129,7 @@ impl FromStr for Day {
             _ => {
                 println!("Unable to parse {s} into `Day`");
                 Err(E::ParseError)
-            },
+            }
         }
     }
 }
@@ -187,7 +187,7 @@ impl FromStr for Part {
             _ => {
                 println!("Unable to parse {s} into `Part`");
                 Err(E::ParseError)
-            },
+            }
         }
     }
 }

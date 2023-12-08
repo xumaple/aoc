@@ -101,7 +101,9 @@ impl Ord for Hand {
 
 #[aoc_proc::aoc_run(07a)]
 pub fn run(input: impl AsRef<str>) -> Result<i32, BoxError> {
-    let sum = input.as_ref().lines()
+    let sum = input
+        .as_ref()
+        .lines()
         .map(|line| Hand::new(line))
         .sorted()
         .enumerate()

@@ -1,5 +1,5 @@
-use util::*;
 use aoc_proc::aoc_run;
+use util::*;
 
 #[aoc_run(01a)]
 pub fn run(input: impl AsRef<str>) -> Result<i32, BoxError> {

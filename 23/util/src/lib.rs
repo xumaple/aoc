@@ -4,10 +4,10 @@ use std::any::type_name;
 use std::fs::File;
 use std::io::{self, BufRead, BufReader, Lines};
 
-pub use std::path::Path;
 pub use std::cmp::{Eq, Ord, Ordering, PartialEq, PartialOrd};
 pub use std::fmt::Debug;
 pub use std::ops::Range;
+pub use std::path::Path;
 
 pub mod aoc;
 pub mod error;

@@ -1,5 +1,5 @@
-use util::*;
 use aoc_proc::aoc_run;
+use util::*;
 
 fn adjust_gear(sorted_list: &mut Vec<Gear>, adjustment: i32, min_val: usize, max_val: usize) {
     for g in sorted_list.iter_mut() {
@@ -47,7 +47,9 @@ impl Gear {
 
 #[aoc_run(03b)]
 pub fn run(input: impl AsRef<str>) -> Result<i32, BoxError> {
-    let mut symbol_locs: Vec<_> = input.as_ref().lines()
+    let mut symbol_locs: Vec<_> = input
+        .as_ref()
+        .lines()
         .into_iter()
         .map(|line| {
             Ok(line
