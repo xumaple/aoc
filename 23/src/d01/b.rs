@@ -48,7 +48,6 @@ pub fn run(input: impl AsRef<str>) -> Result<i32, BoxError> {
     for l in input.as_ref().lines() {
         let i1 = find_multiple_inputs(l.as_bytes().iter(), &mappings);
         let i2 = find_multiple_inputs(l.as_bytes().iter().rev(), &rmappings);
-        println!("{}", sum);
         sum += 10 * i1 + i2;
     }
 

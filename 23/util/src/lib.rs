@@ -11,6 +11,7 @@ pub use std::path::Path;
 pub use std::str::FromStr;
 pub use itertools::Itertools;
 pub use std::collections::{HashMap, HashSet, BTreeMap, BTreeSet};
+pub use num::integer::lcm;
 
 pub mod aoc;
 pub mod error;

@@ -1,4 +1,3 @@
-
 use util::*;
 
 pub mod a;
@@ -7,7 +6,7 @@ pub mod b;
 pub type IntType = u64;
 pub enum Choice {
     Right,
-    Left
+    Left,
 }
 
 pub struct Directions(Vec<Choice>);
@@ -15,11 +14,15 @@ pub struct Directions(Vec<Choice>);
 impl FromStr for Directions {
     type Err = E;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Ok(Self(s.chars().map(|c| match c {
-            'R' => Choice::Right,
-            'L' => Choice::Left,
-            _ => unimplemented!(),
-        }).collect_vec()))
+        Ok(Self(
+            s.chars()
+                .map(|c| match c {
+                    'R' => Choice::Right,
+                    'L' => Choice::Left,
+                    _ => unimplemented!(),
+                })
+                .collect_vec(),
+        ))
     }
 }
 
@@ -38,7 +41,8 @@ pub struct MapEntry {
 impl MapEntry {
     pub fn new() -> Self {
         Self {
-            left: usize::MAX, right: usize::MAX
+            left: usize::MAX,
+            right: usize::MAX,
         }
     }
 }
@@ -52,7 +56,9 @@ pub struct Map {
 impl Map {
     pub fn new() -> Self {
         Self {
-            map: Vec::new(), indices: HashMap::new(), dest: HashSet::new(),
+            map: Vec::new(),
+            indices: HashMap::new(),
+            dest: HashSet::new(),
         }
     }
 
@@ -63,25 +69,37 @@ impl Map {
         })
     }
 
-    pub fn add_mappings<'a>(&mut self, lines: impl Iterator<Item = &'a str>) -> Vec<usize> {
-        
-        lines.map(|line| {
-            let (a, bc) = line.ssplit_once(" = ");
-            let (b, c) = bc[1..9].ssplit_once(", ");
+    pub fn add_mappings<'a, F, G>(
+        &mut self,
+        lines: impl Iterator<Item = &'a str>,
+        start_pred: F,
+        end_pred: G,
+    ) -> Vec<usize>
+    where
+        F: Fn(&str) -> bool,
+        G: Fn(&str) -> bool,
+    {
+        lines
+            .map(|line| {
+                let (a, bc) = line.ssplit_once(" = ");
+                let (b, c) = bc[1..9].ssplit_once(", ");
 
-            let a_entry_index = self.get_entry_index(a);
-            let mut a_entry = self.map[a_entry_index];
-            a_entry.left = self.get_entry_index(b);
-            a_entry.right = self.get_entry_index(c);
-            self.map[a_entry_index] = a_entry;
-            if a == "ZZZ" {
-                let _ = self.dest.insert(a_entry_index);
-            }
-            (a == "AAA", a_entry_index)
-        }).filter(|(pred, i)| *pred).map(|(pred, i)| i).collect()
+                let a_entry_index = self.get_entry_index(a);
+                let mut a_entry = self.map[a_entry_index];
+                a_entry.left = self.get_entry_index(b);
+                a_entry.right = self.get_entry_index(c);
+                self.map[a_entry_index] = a_entry;
+                if end_pred(a) {
+                    let _ = self.dest.insert(a_entry_index);
+                }
+                (start_pred(a), a_entry_index)
+            })
+            .filter(|(pred, _)| *pred)
+            .map(|(_, i)| i)
+            .collect()
     }
 
-    pub fn traverse_steps(&self, directions: Directions, start: usize) -> IntType {
+    pub fn traverse_steps(&self, directions: &Directions, start: usize) -> IntType {
         let mut steps = 0;
         let mut curr_ind = start;
         let mut it = directions.iter();
@@ -101,7 +119,7 @@ impl Map {
             let entry = self.map[curr_ind];
             curr_ind = match *next() {
                 Choice::Left => entry.left,
-                Choice::Right => entry.right
+                Choice::Right => entry.right,
             };
             steps += 1;
         }
@@ -116,13 +134,13 @@ mod test_a {
 
     #[test]
     fn sample() {
-        assert_eq!(run(read("src/d08/sample.txt").unwrap()).unwrap(), 2);
+        assert_eq!(run(read("src/d08/sample-a.txt").unwrap()).unwrap(), 6);
     }
 
-    // #[test]
-    // fn offical() {
-    //     assert_eq!(run(read("src/d08/input.txt").unwrap()).unwrap(), 0);
-    // }
+    #[test]
+    fn offical() {
+        assert_eq!(run(read("src/d08/input.txt").unwrap()).unwrap(), 16897);
+    }
 }
 
 #[cfg(test)]
@@ -132,11 +150,11 @@ mod test_b {
 
     #[test]
     fn sample() {
-        assert_eq!(run(read("src/d08/sample.txt").unwrap()).unwrap(), 0);
+        assert_eq!(run(read("src/d08/sample-b.txt").unwrap()).unwrap(), 6);
     }
 
-    // #[test]
-    // fn offical() {
-    //     assert_eq!(run(read("src/d08/input.txt").unwrap()).unwrap(), 0);
-    // }
+    #[test]
+    fn offical() {
+        assert_eq!(run(read("src/d08/input.txt").unwrap()).unwrap(), 16563603485021);
+    }
 }
