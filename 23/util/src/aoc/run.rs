@@ -217,14 +217,3 @@ impl FromStr for Run {
         })
     }
 }
-
-// impl ToTokens for Run {
-//     fn to_tokens(&self, tokens: &mut TokenStream) {
-//         tokens.append(Ident::new("Run", Span::call_site()));
-//         tokens.append(Punct::new('{', Spacing::Alone));
-//         self.day.to_tokens(tokens);
-//         tokens.append(Punct::new(',', Spacing::Alone));
-//         self.part.to_tokens(tokens);
-//         tokens.append(Punct::new('}', Spacing::Alone));
-//     }
-// }
