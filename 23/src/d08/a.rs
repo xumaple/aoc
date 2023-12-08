@@ -6,8 +6,6 @@ pub fn run(input: impl AsRef<str>) -> Result<IntType, BoxError> {
     let directions = lines.next().unwrap().parse::<Directions>()?;
     let _ = lines.next();
     let mut map = Map::new();
-    // println!("{:?}{:?}{:?}", lines.next(), lines.next(), lines.next());
-    map.add_mappings(lines);
-    // println!("{:?} {:?}", directions.0.len(), map.indices);
-    Ok(map.traverse_steps(directions))
+    let start = map.add_mappings(lines);
+    Ok(map.traverse_steps(directions, start[0]))
 }

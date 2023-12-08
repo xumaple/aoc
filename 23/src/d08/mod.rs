@@ -46,14 +46,13 @@ impl MapEntry {
 pub struct Map {
     map: Vec<MapEntry>,
     indices: HashMap<String, usize>,
-    start: usize,
-    dest: usize,
+    dest: HashSet<usize>,
 }
 
 impl Map {
     pub fn new() -> Self {
         Self {
-            map: Vec::new(), indices: HashMap::new(), start: usize::MAX, dest: usize::MAX,
+            map: Vec::new(), indices: HashMap::new(), dest: HashSet::new(),
         }
     }
 
@@ -64,8 +63,9 @@ impl Map {
         })
     }
 
-    pub fn add_mappings<'a>(&mut self, lines: impl Iterator<Item = &'a str>) {
-        lines.for_each(|line| {
+    pub fn add_mappings<'a>(&mut self, lines: impl Iterator<Item = &'a str>) -> Vec<usize> {
+        
+        lines.map(|line| {
             let (a, bc) = line.ssplit_once(" = ");
             let (b, c) = bc[1..9].ssplit_once(", ");
 
@@ -74,18 +74,16 @@ impl Map {
             a_entry.left = self.get_entry_index(b);
             a_entry.right = self.get_entry_index(c);
             self.map[a_entry_index] = a_entry;
-            if a == "AAA" {
-                self.start = a_entry_index;
-            }
             if a == "ZZZ" {
-                self.dest = a_entry_index;
+                let _ = self.dest.insert(a_entry_index);
             }
-        });
+            (a == "AAA", a_entry_index)
+        }).filter(|(pred, i)| *pred).map(|(pred, i)| i).collect()
     }
 
-    pub fn traverse_steps(&self, directions: Directions) -> IntType {
+    pub fn traverse_steps(&self, directions: Directions, start: usize) -> IntType {
         let mut steps = 0;
-        let mut curr_ind = self.start;
+        let mut curr_ind = start;
         let mut it = directions.iter();
         // let dest = *self.indices.get(dest_string).unwrap();
 
@@ -99,7 +97,7 @@ impl Map {
             }
         };
 
-        while curr_ind != self.dest {
+        while !self.dest.contains(&curr_ind) {
             let entry = self.map[curr_ind];
             curr_ind = match *next() {
                 Choice::Left => entry.left,
