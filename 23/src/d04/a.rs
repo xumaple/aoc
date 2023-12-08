@@ -1,5 +1,6 @@
 use std::collections::HashSet;
 use util::*;
+use aoc_proc::aoc_run;
 
 struct Card {
     winning: HashSet<i32>,
@@ -26,23 +27,18 @@ impl Card {
     }
 }
 
-pub fn run(filename: &str) -> Result<i32, BoxError> {
-    let sum = read_lines(filename)?
+#[aoc_run(04a)]
+pub fn run(input: impl AsRef<str>) -> Result<i32, BoxError> {
+    let sum = input.as_ref().lines()
         .into_iter()
         .map(|line| {
-            let c = Card::new(line?.ssplit_once(": ").1);
+            let c = Card::new(line.ssplit_once(": ").1);
             Ok(c.get_score())
         })
         .collect::<Result<Vec<i32>, BoxError>>()?
         .iter()
         .sum();
     Ok(sum)
-}
-
-#[allow(dead_code)]
-fn main() -> NulBoxError {
-    println!("{}", run("src/d04/input.txt")?);
-    Ok(())
 }
 
 #[cfg(test)]

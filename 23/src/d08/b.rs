@@ -2,16 +2,10 @@ use util::*;
 #[path = "./shared.rs"]
 mod shared;
 use shared::*;
-use itertools::Itertools;
 
-pub fn run(filename: &str) -> Result<IntType, BoxError> {
+// #[aoc_proc::aoc_run(08b)]
+pub fn run(input: impl AsRef<str>) -> Result<IntType, BoxError> {
     Ok(0)
-}
-
-#[allow(dead_code)]
-fn main() -> NulBoxError {
-    println!("{}", run("src/d08/input.txt")?);
-    Ok(())
 }
 
 #[cfg(test)]

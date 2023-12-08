@@ -3,8 +3,8 @@ use util::*;
 mod shared;
 use shared::*;
 
-pub fn run(filename: &str) -> Result<IntType, BoxError> {
-    let input = read(filename)?;
+#[aoc_proc::aoc_run(06a)]
+pub fn run(input: impl AsRef<str>) -> Result<IntType, BoxError> {
     let (times, distances) = input.ssplit_once("\n");
     let sum = times[10..].split_whitespace_parse::<IntType>()
         .zip(distances[10..].split_whitespace_parse::<IntType>())
@@ -12,12 +12,6 @@ pub fn run(filename: &str) -> Result<IntType, BoxError> {
         .map(|range| range.end-range.start)
         .fold(1, |a, b| a*b);
     Ok(sum)
-}
-
-#[allow(dead_code)]
-fn main() -> NulBoxError {
-    println!("{}", run("src/d06/input.txt")?);
-    Ok(())
 }
 
 #[cfg(test)]

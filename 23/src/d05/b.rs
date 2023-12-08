@@ -7,9 +7,10 @@ mod shared;
 use itertools::Itertools;
 use shared::*;
 
-pub fn run(filename: &str) -> Result<i64, BoxError> {
-    let mut l_iter = read_lines(filename)?;
-    let seeds: Vec<Range<i64>> = l_iter.next().unwrap()?[7..]
+#[aoc_proc::aoc_run(05b)]
+pub fn run(input: impl AsRef<str>) -> Result<i64, BoxError> {
+    let mut l_iter = input.as_ref().lines();
+    let seeds: Vec<Range<i64>> = l_iter.next().unwrap()[7..]
         .split_whitespace()
         .map(i64::ufrom)
         .array_chunks::<2>()
@@ -17,7 +18,6 @@ pub fn run(filename: &str) -> Result<i64, BoxError> {
         .collect_vec();
 
     let mappings: Vec<Mapping> = l_iter.fold(Vec::new(), |mut mappings, s| {
-        let s = s.unwrap();
         if s.len() == 0 {
             mappings.push(Mapping::new());
             return mappings;
@@ -49,12 +49,6 @@ pub fn run(filename: &str) -> Result<i64, BoxError> {
         .min()
         .unwrap();
     Ok(smallest)
-}
-
-#[allow(dead_code)]
-fn main() -> NulBoxError {
-    println!("{}", run("src/d05/input.txt")?);
-    Ok(())
 }
 
 #[cfg(test)]

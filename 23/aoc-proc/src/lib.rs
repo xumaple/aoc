@@ -2,10 +2,7 @@
 extern crate lazy_static;
 extern crate proc_macro;
 
-use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
-use syn::parse::{Parse, ParseStream, Parser};
-use syn::punctuated::Pair;
 use syn::*;
 
 use std::collections::BTreeSet;
@@ -14,7 +11,6 @@ use std::result::Result as StdResult;
 use std::sync::Mutex;
 
 use util::aoc::*;
-use util::error::*;
 
 lazy_static! {
     static ref REGISTERED_RUNS: Mutex<BTreeSet<Run>> = Mutex::new(Default::default());
@@ -103,7 +99,7 @@ pub fn get_all_runs(_input: proc_macro::TokenStream) -> proc_macro::TokenStream 
 }
 
 #[proc_macro]
-pub fn get_runner(run: proc_macro::TokenStream) -> proc_macro::TokenStream {
+pub fn run(run: proc_macro::TokenStream) -> proc_macro::TokenStream {
     let run_: syn::Expr = match syn::parse(run) {
         Ok(t) => t,
         Err(e) => {
@@ -121,7 +117,7 @@ pub fn get_runner(run: proc_macro::TokenStream) -> proc_macro::TokenStream {
         let input_file_ = format!("src/d{}/input.txt", run_key.day.num_repr());
         quote!(
             (#day_, #part_) => {
-                (crate::#day_mod_::#part_mod_::#runner {}, #input_file_)
+                crate::#day_mod_::#part_mod_::#runner {}.solve(#input_file_)
             }
         )
     });

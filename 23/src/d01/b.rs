@@ -1,7 +1,9 @@
 use std::ops::Deref;
 use util::*;
+use aoc_proc::aoc_run;
 
-pub fn run(filename: &str) -> Result<i32, BoxError> {
+#[aoc_run(01b)]
+pub fn run(input: impl AsRef<str>) -> Result<i32, BoxError> {
     let mappings = vec![
         ("1".as_bytes(), 1),
         ("2".as_bytes(), 2),
@@ -43,8 +45,7 @@ pub fn run(filename: &str) -> Result<i32, BoxError> {
         ("enin".as_bytes(), 9),
     ];
     let mut sum = 0;
-    for l in read_lines(filename)? {
-        let l = l?;
+    for l in input.as_ref().lines() {
         let i1 = find_multiple_inputs(l.as_bytes().iter(), &mappings);
         let i2 = find_multiple_inputs(l.as_bytes().iter().rev(), &rmappings);
         sum += 10 * i1 + i2;
@@ -74,12 +75,6 @@ where
     }
 
     panic!("Didn't find anything...");
-}
-
-#[allow(dead_code)]
-fn main() -> NulBoxError {
-    println!("{}", run("src/d01/input.txt")?);
-    Ok(())
 }
 
 #[cfg(test)]

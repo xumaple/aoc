@@ -1,15 +1,16 @@
 use std::collections::HashMap;
 use util::*;
+use aoc_proc::aoc_run;
 
-pub fn run(filename: &str) -> Result<i32, BoxError> {
+#[aoc_run(02a)]
+pub fn run(input: impl AsRef<str>) -> Result<i32, BoxError> {
     let maxes: HashMap<_, _> = [("red", 12), ("green", 13), ("blue", 14)]
         .iter()
         .cloned()
         .collect();
 
     let mut sum = 0;
-    for l in read_lines(filename)? {
-        let l = l?;
+    for l in input.as_ref().lines() {
         let (game_num_str, hands) = l.split_once(": ").expect("Did not find ':' in game line");
         let game_num: i32 = unsafe { game_num_str.get_unchecked(5..) }.parse()?;
 
@@ -42,12 +43,6 @@ pub fn run(filename: &str) -> Result<i32, BoxError> {
         }
     }
     Ok(sum)
-}
-
-#[allow(dead_code)]
-fn main() -> NulBoxError {
-    println!("{}", run("src/d02/input.txt")?);
-    Ok(())
 }
 
 #[cfg(test)]

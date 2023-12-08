@@ -1,4 +1,5 @@
 use util::*;
+use aoc_proc::aoc_run;
 
 fn adjust_gear(sorted_list: &mut Vec<Gear>, adjustment: i32, min_val: usize, max_val: usize) {
     for g in sorted_list.iter_mut() {
@@ -44,20 +45,21 @@ impl Gear {
     }
 }
 
-pub fn run(filename: &str) -> Result<i32, BoxError> {
-    let mut symbol_locs: Vec<_> = read_lines(filename)?
+#[aoc_run(03b)]
+pub fn run(input: impl AsRef<str>) -> Result<i32, BoxError> {
+    let mut symbol_locs: Vec<_> = input.as_ref().lines()
         .into_iter()
         .map(|line| {
-            Ok(line?
+            Ok(line
                 .char_indices()
                 .filter_map(|(i, c)| if c == '*' { Some(Gear::new(i)) } else { None })
                 .collect::<Vec<Gear>>())
         })
         .collect::<Result<Vec<_>, BoxError>>()?;
 
-    for (curr_y, line) in read_lines(filename)?.into_iter().enumerate() {
+    for (curr_y, line) in input.as_ref().lines().into_iter().enumerate() {
         let mut curr_x = 0;
-        for num_str in line?.split(|c: char| !c.is_numeric()).collect::<Vec<_>>() {
+        for num_str in line.split(|c: char| !c.is_numeric()).collect::<Vec<_>>() {
             if num_str.len() > 0 {
                 // Search for symbol locations that match
                 let min_val = match curr_x {
@@ -83,12 +85,6 @@ pub fn run(filename: &str) -> Result<i32, BoxError> {
         .map(|gears| gears.iter().map(|gear| gear.gear_ratio()).sum::<i32>())
         .sum();
     Ok(sum)
-}
-
-#[allow(dead_code)]
-fn main() -> NulBoxError {
-    println!("{}", run("src/d03/input.txt")?);
-    Ok(())
 }
 
 #[cfg(test)]

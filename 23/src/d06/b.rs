@@ -3,20 +3,14 @@ use util::*;
 mod shared;
 use shared::*;
 
-pub fn run(filename: &str) -> Result<IntType, BoxError> {
-    let input = read(filename)?;
+#[aoc_proc::aoc_run(06b)]
+pub fn run(input: impl AsRef<str>) -> Result<IntType, BoxError> {
     let (times, distances) = input.ssplit_once("\n");
     let ans = Race::new(
         times[10..].remove_whitespace().uinto(),
         distances[10..].remove_whitespace().uinto(),
     ).curve_above_distance();
     Ok(ans.end-ans.start)
-}
-
-#[allow(dead_code)]
-fn main() -> NulBoxError {
-    println!("{}", run("src/d06/input.txt")?);
-    Ok(())
 }
 
 #[cfg(test)]

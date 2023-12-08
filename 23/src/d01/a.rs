@@ -13,12 +13,6 @@ pub fn run(input: impl AsRef<str>) -> Result<i32, BoxError> {
     Ok(sum.try_into()?)
 }
 
-// #[allow(dead_code)]
-// fn main() -> NulBoxError {
-//     println!("{}", run("src/d01/input.txt")?);
-//     Ok(())
-// }
-
 #[cfg(test)]
 mod test_01a {
     use super::run;

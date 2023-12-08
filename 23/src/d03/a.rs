@@ -1,4 +1,5 @@
 use util::*;
+use aoc_proc::aoc_run;
 
 fn exists(sorted_list: &Vec<usize>, min_val: usize, max_val: usize) -> bool {
     for &x in sorted_list {
@@ -14,11 +15,12 @@ fn exists(sorted_list: &Vec<usize>, min_val: usize, max_val: usize) -> bool {
     return false;
 }
 
-pub fn run(filename: &str) -> Result<i32, BoxError> {
-    let symbol_locs: Vec<_> = read_lines(filename)?
+#[aoc_run(03a)]
+pub fn run(input: impl AsRef<str>) -> Result<i32, BoxError> {
+    let symbol_locs: Vec<_> = input.as_ref().lines()
         .into_iter()
         .map(|line| {
-            Ok(line?
+            Ok(line
                 .char_indices()
                 .filter_map(|(i, c)| {
                     if c.is_digit(10) || c == '.' {
@@ -30,13 +32,13 @@ pub fn run(filename: &str) -> Result<i32, BoxError> {
                 .collect::<Vec<usize>>())
         })
         .collect::<Result<Vec<_>, BoxError>>()?;
-    let sum: i32 = read_lines(filename)?
+    let sum: i32 = input.as_ref().lines()
         .into_iter()
         .enumerate()
         .map(|(curr_y, line)| {
             let mut curr_x = 0;
             let mut line_sum = 0;
-            for num_str in line?.split(|c: char| !c.is_numeric()).collect::<Vec<_>>() {
+            for num_str in line.split(|c: char| !c.is_numeric()).collect::<Vec<_>>() {
                 if num_str.len() > 0 {
                     // Search for symbol locations that match
                     let min_val = match curr_x {
@@ -61,12 +63,6 @@ pub fn run(filename: &str) -> Result<i32, BoxError> {
         .sum();
     // println!("{:?}", symbol_locs);
     Ok(sum)
-}
-
-#[allow(dead_code)]
-fn main() -> NulBoxError {
-    println!("{}", run("src/d03/input.txt")?);
-    Ok(())
 }
 
 #[cfg(test)]

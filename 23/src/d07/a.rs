@@ -98,19 +98,15 @@ impl Ord for Hand {
         self.partial_cmp(other).unwrap()
     }
 }
-pub fn run(filename: &str) -> Result<i32, BoxError> {
-    let sum = read_lines(filename)?
-        .map(|line| Hand::new(line.unwrap().as_str()))
+
+#[aoc_proc::aoc_run(07a)]
+pub fn run(input: impl AsRef<str>) -> Result<i32, BoxError> {
+    let sum = input.as_ref().lines()
+        .map(|line| Hand::new(line))
         .sorted()
         .enumerate()
         .fold(0, |val, (i, hand)| val + (i as i32 + 1) * hand.bid);
     Ok(sum)
-}
-
-#[allow(dead_code)]
-fn main() -> NulBoxError {
-    println!("{}", run("src/d07/input.txt")?);
-    Ok(())
 }
 
 #[cfg(test)]
