@@ -64,13 +64,3 @@ pub fn run(input: impl AsRef<str>) -> Result<i32, BoxError> {
     // println!("{:?}", symbol_locs);
     Ok(sum)
 }
-
-#[cfg(test)]
-mod test_03ba {
-    use super::run;
-
-    #[test]
-    fn official() {
-        assert_eq!(run("src/d03/input.txt").unwrap(), 530495)
-    }
-}

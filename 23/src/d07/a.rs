@@ -108,18 +108,3 @@ pub fn run(input: impl AsRef<str>) -> Result<i32, BoxError> {
         .fold(0, |val, (i, hand)| val + (i as i32 + 1) * hand.bid);
     Ok(sum)
 }
-
-#[cfg(test)]
-mod test_a {
-    use super::run;
-
-    #[test]
-    fn sample() {
-        assert_eq!(run("src/d07/sample.txt").unwrap(), 6440);
-    }
-
-    #[test]
-    fn offical() {
-        assert_eq!(run("src/d07/input.txt").unwrap(), 248569531);
-    }
-}

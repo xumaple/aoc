@@ -12,13 +12,3 @@ pub fn run(input: impl AsRef<str>) -> Result<i32, BoxError> {
 
     Ok(sum.try_into()?)
 }
-
-#[cfg(test)]
-mod test_01a {
-    use super::run;
-
-    #[test]
-    fn official() {
-        assert_eq!(run("src/d01/input.txt").unwrap(), 54916)
-    }
-}

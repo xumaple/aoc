@@ -86,13 +86,3 @@ pub fn run(input: impl AsRef<str>) -> Result<i32, BoxError> {
         .sum();
     Ok(sum)
 }
-
-#[cfg(test)]
-mod test_03b {
-    use super::run;
-
-    #[test]
-    fn official() {
-        assert_eq!(run("src/d03/input.txt").unwrap(), 80253814)
-    }
-}

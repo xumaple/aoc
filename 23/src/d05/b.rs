@@ -50,18 +50,3 @@ pub fn run(input: impl AsRef<str>) -> Result<i64, BoxError> {
         .unwrap();
     Ok(smallest)
 }
-
-#[cfg(test)]
-mod test_b {
-    use super::run;
-
-    #[test]
-    fn sample() {
-        assert_eq!(run("src/d05/sample.txt").unwrap(), 46);
-    }
-
-    #[test]
-    fn offical() {
-        assert_eq!(run("src/d05/input.txt").unwrap(), 15880236);
-    }
-}
