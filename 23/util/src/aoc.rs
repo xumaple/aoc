@@ -1,14 +1,11 @@
-pub mod day;
-pub use day::*;
+pub mod run;
+pub use run::*;
+pub use super::error::*;
 
-#[derive(Hash, Clone, Copy, Debug, Eq, PartialEq, PartialOrd, Ord)]
-pub enum Part {
-    A,
-    B,
-}
+pub use std::fmt::Debug;
 
-#[derive(Hash, Clone, Copy, Debug, Eq, PartialEq, PartialOrd, Ord)]
-pub struct Run {
-    pub day: Day,
-    pub part: Part,
+pub trait Runner: Debug  {
+    fn solve(&self, filename: &str) -> Result<u64, BoxError> {
+        unimplemented!()
+    }
 }

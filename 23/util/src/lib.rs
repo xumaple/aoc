@@ -3,8 +3,8 @@
 use std::any::type_name;
 use std::fs::File;
 use std::io::{self, BufRead, BufReader, Lines};
-use std::path::Path;
 
+pub use std::path::Path;
 pub use std::cmp::{Eq, Ord, Ordering, PartialEq, PartialOrd};
 pub use std::fmt::Debug;
 pub use std::ops::Range;
@@ -16,9 +16,6 @@ pub mod string;
 pub use string::*;
 pub mod math;
 pub use math::*;
-
-pub type BoxError = Box<dyn std::error::Error>;
-pub type NulBoxError = Result<(), BoxError>;
 
 pub fn read<P: AsRef<Path>>(path: P) -> io::Result<String> {
     let path = path.as_ref();

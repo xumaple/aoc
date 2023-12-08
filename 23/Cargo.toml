@@ -9,6 +9,7 @@ default-run = "advent23"
 
 [dependencies]
 util = { path = "./util" }
+aoc-proc = { path = "./aoc-proc" }
 itertools = "0.12"
 
 [[bin]]
@@ -62,7 +63,6 @@ path = "src/d06/b.rs"
 [[bin]]
 name = "07a"
 path = "src/d07/a.rs"
-
 
 [[bin]]
 name = "07b"
