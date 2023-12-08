@@ -8,6 +8,9 @@ pub use std::cmp::{Eq, Ord, Ordering, PartialEq, PartialOrd};
 pub use std::fmt::Debug;
 pub use std::ops::Range;
 pub use std::path::Path;
+pub use std::str::FromStr;
+pub use itertools::Itertools;
+pub use std::collections::{HashMap, HashSet, BTreeMap, BTreeSet};
 
 pub mod aoc;
 pub mod error;
@@ -33,7 +36,7 @@ pub trait UnsafeFrom<T>: Sized {
 
 impl<T, S> UnsafeFrom<T> for S
 where
-    S: std::str::FromStr,
+    S: FromStr,
     T: AsRef<str>,
 {
     fn ufrom(input: T) -> S {

@@ -4,7 +4,6 @@
 use util::*;
 #[path = "./shared.rs"]
 mod shared;
-use itertools::Itertools;
 use shared::*;
 
 #[aoc_proc::aoc_run(05b)]

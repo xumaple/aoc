@@ -2,10 +2,10 @@
 #![feature(slice_group_by)]
 
 use aoc_proc::{get_all_runs, run};
-use itertools::Itertools;
 use std::env;
 use util::aoc::*;
 use util::NulBoxError;
+use util::Itertools;
 
 mod d01;
 mod d02;

@@ -10,7 +10,6 @@ default-run = "advent23"
 [dependencies]
 util = { path = "./util" }
 aoc-proc = { path = "./aoc-proc" }
-itertools = "0.12"
 
 [workspace]
 
