@@ -7,4 +7,6 @@ pub enum E {
     SplitError(String),
     #[error("Unable to parse from string")]
     ParseError,
+    #[error("Unable to parse command line: {0}")]
+    CommandLineError(&'static str),
 }

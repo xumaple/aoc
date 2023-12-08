@@ -126,7 +126,10 @@ impl FromStr for Day {
             "23" => Ok(Day::D23),
             "24" => Ok(Day::D24),
             "25" => Ok(Day::D25),
-            _ => Err(E::ParseError),
+            _ => {
+                println!("Unable to parse {s} into `Day`");
+                Err(E::ParseError)
+            },
         }
     }
 }
@@ -175,12 +178,16 @@ impl FromStr for Part {
     type Err = E;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         if s.len() != 1 {
+            println!("Unable to parse {s} into `Part`");
             return Err(E::ParseError);
         }
         match s.chars().next().unwrap().to_ascii_lowercase() {
             'a' => Ok(Self::A),
             'b' => Ok(Self::B),
-            _ => Err(E::ParseError),
+            _ => {
+                println!("Unable to parse {s} into `Part`");
+                Err(E::ParseError)
+            },
         }
     }
 }
@@ -194,6 +201,20 @@ pub struct Run {
 impl Display for Run {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}{}", self.day.num_repr(), self.part.to_string())
+    }
+}
+
+impl FromStr for Run {
+    type Err = E;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        if s.len() != 3 {
+            println!("Unable to parse {s} into `Run` {}", s);
+            return Err(E::ParseError);
+        }
+        Ok(Self {
+            day: s[..2].parse()?,
+            part: s[2..].parse()?,
+        })
     }
 }
 
