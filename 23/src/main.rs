@@ -4,8 +4,8 @@
 use aoc_proc::{get_all_runs, run};
 use std::env;
 use util::aoc::*;
-use util::NulBoxError;
 use util::Itertools;
+use util::NulBoxError;
 
 mod d01;
 mod d02;
@@ -15,6 +15,7 @@ mod d05;
 mod d06;
 mod d07;
 mod d08;
+mod d09;
 
 fn main() -> NulBoxError {
     let mut args = env::args();

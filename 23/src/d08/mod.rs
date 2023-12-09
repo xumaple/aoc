@@ -155,6 +155,9 @@ mod test_b {
 
     #[test]
     fn offical() {
-        assert_eq!(run(read("src/d08/input.txt").unwrap()).unwrap(), 16563603485021);
+        assert_eq!(
+            run(read("src/d08/input.txt").unwrap()).unwrap(),
+            16563603485021
+        );
     }
 }
