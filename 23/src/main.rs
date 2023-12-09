@@ -19,15 +19,19 @@ mod d09;
 mod d10;
 
 fn main() -> NulBoxError {
-    let mut args = env::args();
-    let _ = args.next();
-    if let Some(s) = args.next() {
-        let runner = s.parse::<Run>()?;
-        if let Some(_) = args.next() {
-            return Err(E::CommandLineError("Too many arguments"))?;
-        }
-        println!("{}", run!(runner)?);
+    let args = CliArgs::parse();
+    if let Some(r) = args.module.as_deref() {
+        let runner = r.parse::<Run>()?;
+        println!(
+            "{}",
+            run!(runner, args.filename.unwrap_or("input.txt".to_string()))?
+        );
         return Ok(());
+    }
+    if args.filename.is_some() {
+        return Err(E::CommandLineError(
+            "Must specify module in format <DDP>, eg. `cargo run -- 01a`",
+        ))?;
     }
 
     println!("AoC 2023 Results:");
@@ -39,7 +43,7 @@ fn main() -> NulBoxError {
             println!("   -----{day}-----");
             runs.sorted()
                 .map(|runner| -> NulBoxError {
-                    println!("    Part {}: {}", runner.part, run!(runner)?);
+                    println!("    Part {}: {}", runner.part, run!(runner, "input.txt")?);
                     Ok(())
                 })
                 .collect::<Result<Vec<()>, BoxError>>()?;

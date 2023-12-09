@@ -2,6 +2,9 @@
 extern crate lazy_static;
 extern crate proc_macro;
 
+mod syn_util;
+use syn_util::*;
+
 use quote::{quote, ToTokens};
 use syn::*;
 
@@ -70,7 +73,7 @@ pub fn aoc_run(
         #[derive(Clone, Debug)]
         pub struct #runner;
         impl util::aoc::Runner for #runner {
-            fn solve(&self, filename: &str) -> Result<u64, util::BoxError> {
+            fn solve(&self, filename: impl AsRef<Path>) -> Result<u64, util::BoxError> {
                 Ok(#fn_name(util::read(filename)?)?.uinton())
             }
         }
@@ -98,9 +101,20 @@ pub fn get_all_runs(_input: proc_macro::TokenStream) -> proc_macro::TokenStream 
     .into()
 }
 
+struct RunArgs(syn::Expr, syn_util::StrLitOrExpr);
+impl syn::parse::Parse for RunArgs {
+    fn parse(input: syn::parse::ParseStream) -> Result<Self> {
+        let run = input.parse()?;
+        input.parse::<Token![,]>()?;
+        let filename = input.parse()?;
+        input.parse::<Option<Token![,]>>()?;
+        Ok(Self(run, filename))
+    }
+}
+
 #[proc_macro]
 pub fn run(run: proc_macro::TokenStream) -> proc_macro::TokenStream {
-    let run_: syn::Expr = match syn::parse(run) {
+    let RunArgs(run_, filename) = match syn::parse(run) {
         Ok(t) => t,
         Err(e) => {
             return compile_err(e.to_compile_error(), "Unable to parse get_runner input");
@@ -114,12 +128,24 @@ pub fn run(run: proc_macro::TokenStream) -> proc_macro::TokenStream {
         let day_mod_ = quote::format_ident!("d{}", run_key.day.num_repr());
         let part_mod_ = quote::format_ident!("{}", run_key.part.lower_repr());
         let runner = quote::format_ident!("Runner{}", run_key.to_string());
-        let input_file_ = format!("src/d{}/input.txt", run_key.day.num_repr());
-        quote!(
-            (#day_, #part_) => {
-                crate::#day_mod_::#part_mod_::#runner {}.solve(#input_file_)
+        match &filename {
+            StrLitOrExpr::LitStr(filename_lit) => {
+                let input_file_ = format!("src/d{}/{}", run_key.day.num_repr(), filename_lit.value());
+                quote!(
+                    (#day_, #part_) => {
+                        crate::#day_mod_::#part_mod_::#runner {}.solve(#input_file_)
+                    }
+                )
+            },
+            StrLitOrExpr::Expr(filename_expr) => {
+                let input_file_ = format!("src/d{}", run_key.day.num_repr());
+                quote!(
+                    (#day_, #part_) => {
+                        crate::#day_mod_::#part_mod_::#runner {}.solve(format!("{}/{}", #input_file_, #filename_expr))
+                    }
+                )
             }
-        )
+        }
     });
 
     quote!(
