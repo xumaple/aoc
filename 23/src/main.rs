@@ -2,7 +2,6 @@
 #![feature(slice_group_by)]
 
 use aoc_proc::{get_all_runs, run};
-use std::env;
 use util::aoc::*;
 use util::Itertools;
 use util::NulBoxError;

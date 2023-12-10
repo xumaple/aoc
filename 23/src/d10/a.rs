@@ -2,6 +2,6 @@ use super::*;
 
 #[aoc_proc::aoc_run(10a)]
 pub fn run(input: impl AsRef<str>) -> Result<IntType, BoxError> {
-    let sum = input.as_ref().lines().map(|line| 0).sum();
-    Ok(sum)
+    let length = input.as_ref().parse::<Map>()?.get_path_len();
+    Ok(length / 2)
 }
