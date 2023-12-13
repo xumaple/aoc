@@ -34,32 +34,47 @@ impl Mirrors {
         rotated.into_iter()
     }
 
-    fn get_reflection(v: Vec<String>) -> usize {
+    fn equals(s1: &String, s2: &String) -> usize {
+        s1.chars()
+            .zip(s2.chars())
+            .map(|(c1, c2)| if c1 == c2 { 0 } else { 1 })
+            .sum()
+    }
+
+    fn get_reflection(v: Vec<String>, fudge: bool) -> Option<usize> {
         for i in 1..v.len() {
-            if v[i] == v[i - 1] {
+            let mut diffs = Mirrors::equals(&v[i], &v[i - 1]);
+            if match fudge {
+                true => diffs < 2,
+                false => diffs == 0,
+            } {
                 for j in i..v.len() {
                     if 2 * i - j == 1 || j + 1 == v.len() {
-                        return i;
+                        if fudge && diffs == 0 {
+                            break;
+                        }
+                        return Some(i);
                     }
-                    if v[j + 1] != v[2 * i - j - 2] {
+                    diffs += Mirrors::equals(&v[j + 1], &v[2 * i - j - 2]);
+                    if diffs >= if fudge { 2 } else { 1 } {
                         break;
                     }
                 }
             }
         }
-        0
+        None
     }
 
-    pub fn get_vertical_reflection(&self) -> usize {
+    pub fn get_vertical_reflection(&self, fudge: bool) -> Option<usize> {
         let iter = self
             .iter_hor()
             .map(|v| unsafe { String::from_utf8_unchecked(v.clone()) });
-        Mirrors::get_reflection(iter.collect_vec())
+        Mirrors::get_reflection(iter.collect_vec(), fudge)
     }
 
-    pub fn get_horizontal_reflection(&self) -> usize {
+    pub fn get_horizontal_reflection(&self, fudge: bool) -> Option<usize> {
         let iter = self.iter_vert();
-        Mirrors::get_reflection(iter.collect_vec())
+        Mirrors::get_reflection(iter.collect_vec(), fudge)
     }
 }
 
@@ -70,7 +85,7 @@ mod test_a {
 
     #[test]
     fn sample() {
-        assert_eq!(run(read("src/d13/sample.txt").unwrap()).unwrap(), 0);
+        assert_eq!(run(read("src/d13/sample.txt").unwrap()).unwrap(), 405);
     }
 
     #[test]
@@ -86,11 +101,11 @@ mod test_b {
 
     #[test]
     fn sample() {
-        assert_eq!(run(read("src/d13/sample.txt").unwrap()).unwrap(), 0);
+        assert_eq!(run(read("src/d13/sample.txt").unwrap()).unwrap(), 400);
     }
 
-    // #[test]
-    // fn offical() {
-    //     assert_eq!(run(read("src/d13/input.txt").unwrap()).unwrap(), 0);
-    // }
+    #[test]
+    fn offical() {
+        assert_eq!(run(read("src/d13/input.txt").unwrap()).unwrap(), 31954);
+    }
 }

@@ -19,7 +19,7 @@ impl FromStr for Universe {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let mut col_has_galaxy = vec![false; s.find('\n').unwrap()];
         let mut empty_rows = Vec::new();
-        let mut galaxies =  Vec::new();
+        let mut galaxies = Vec::new();
 
         for (i, row) in s.lines().enumerate() {
             if let None = row.find('#') {
@@ -63,12 +63,16 @@ impl Universe {
             Some(pos) => pos as IntType,
             None => search.len() as IntType,
         }
-    } 
+    }
     pub fn adjust_positions(&mut self, times_bigger: IntType) -> &mut Self {
         let empty_rows = self.empty_rows.clone();
         let empty_cols = self.empty_cols.clone();
-        self.iter_rows_mut().for_each(|curr_row| *curr_row += (times_bigger - 1) * Universe::num_below(*curr_row, &empty_rows));
-        self.iter_cols_mut().for_each(|curr_col| *curr_col += (times_bigger - 1) * Universe::num_below(*curr_col, &empty_cols));
+        self.iter_rows_mut().for_each(|curr_row| {
+            *curr_row += (times_bigger - 1) * Universe::num_below(*curr_row, &empty_rows)
+        });
+        self.iter_cols_mut().for_each(|curr_col| {
+            *curr_col += (times_bigger - 1) * Universe::num_below(*curr_col, &empty_cols)
+        });
         self
     }
 
@@ -125,6 +129,9 @@ mod test_b {
 
     #[test]
     fn offical() {
-        assert_eq!(run(read("src/d11/input.txt").unwrap()).unwrap(), 357134560737);
+        assert_eq!(
+            run(read("src/d11/input.txt").unwrap()).unwrap(),
+            357134560737
+        );
     }
 }

@@ -49,7 +49,7 @@ impl Record {
         }
         let pos = match springs.find('?') {
             Some(pos) => pos,
-            None => { return if known_counts == self.1 { 1 } else { 0 }},
+            None => return if known_counts == self.1 { 1 } else { 0 },
         };
         let mut s1 = springs.clone();
         let mut s2 = springs.clone();
@@ -64,10 +64,13 @@ impl Record {
         match s.split_once('?') {
             Some((f, _)) => f,
             None => s,
-        }.split('.').filter_map(|s| match s.len() {
+        }
+        .split('.')
+        .filter_map(|s| match s.len() {
             0 => None,
-            i => Some(i as IntType)
-        }).collect_vec()
+            i => Some(i as IntType),
+        })
+        .collect_vec()
     }
 
     fn counts_is_possible(&self, counts: &Vec<IntType>) -> bool {

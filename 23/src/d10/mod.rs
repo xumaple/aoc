@@ -107,28 +107,37 @@ impl Map {
 
     pub fn get_connection(&self) -> (char, Direction) {
         let (mut up, mut down, mut left, mut right) = (false, false, false, false);
-        
-        if self.1.0 > 0{let mut pos = self.1.clone();pos.next('|', Direction::Up);
-        if self.pos(&pos) == '|' || self.pos(&pos) == '7' || self.pos(&pos) == 'F' {
-            up = true;
-        }}
-        if self.1.0 < self.0.len() - 1{let mut pos = self.1.clone();
-        pos.next('|', Direction::Down);
-        if self.pos(&pos) == '|' || self.pos(&pos) == 'L' || self.pos(&pos) == 'J' {
-            down = true;
-        }}
-        if self.1.1 < self.0[0].len() - 1{let mut pos = self.1.clone();
-        pos.next('|', Direction::Right);
-        if self.pos(&pos) == '-' || self.pos(&pos) == '7' || self.pos(&pos) == 'J' {
-            right = true;
-        }}
-        if self.1.1 > 0{let mut pos = self.1.clone();
-        pos.next('|', Direction::Left);
-        if self.pos(&pos) == '-' || self.pos(&pos) == 'F' || self.pos(&pos) == 'L' {
-            left = true;
-        }}
+
+        if self.1 .0 > 0 {
+            let mut pos = self.1.clone();
+            pos.next('|', Direction::Up);
+            if self.pos(&pos) == '|' || self.pos(&pos) == '7' || self.pos(&pos) == 'F' {
+                up = true;
+            }
+        }
+        if self.1 .0 < self.0.len() - 1 {
+            let mut pos = self.1.clone();
+            pos.next('|', Direction::Down);
+            if self.pos(&pos) == '|' || self.pos(&pos) == 'L' || self.pos(&pos) == 'J' {
+                down = true;
+            }
+        }
+        if self.1 .1 < self.0[0].len() - 1 {
+            let mut pos = self.1.clone();
+            pos.next('|', Direction::Right);
+            if self.pos(&pos) == '-' || self.pos(&pos) == '7' || self.pos(&pos) == 'J' {
+                right = true;
+            }
+        }
+        if self.1 .1 > 0 {
+            let mut pos = self.1.clone();
+            pos.next('|', Direction::Left);
+            if self.pos(&pos) == '-' || self.pos(&pos) == 'F' || self.pos(&pos) == 'L' {
+                left = true;
+            }
+        }
         match (up, down, left, right) {
-            (true, true, false, false) => ('|', Direction::Up,),
+            (true, true, false, false) => ('|', Direction::Up),
             (true, false, true, false) => ('J', Direction::Right),
             (true, false, false, true) => ('L', Direction::Left),
             (false, true, true, false) => ('7', Direction::Right),
@@ -155,11 +164,23 @@ impl Map {
             .iter()
             .map(|line| {
                 line.iter()
-                    .fold((0 as IntType, 0), |(count, loop_layers_to_left), el| match el {
-                        '$' => (count, loop_layers_to_left),
-                        '#' => (count, loop_layers_to_left + 1),
-                        _ => (count + if loop_layers_to_left > 0 { loop_layers_to_left % 2 } else { 0 }, loop_layers_to_left),
-                    }).0
+                    .fold(
+                        (0 as IntType, 0),
+                        |(count, loop_layers_to_left), el| match el {
+                            '$' => (count, loop_layers_to_left),
+                            '#' => (count, loop_layers_to_left + 1),
+                            _ => (
+                                count
+                                    + if loop_layers_to_left > 0 {
+                                        loop_layers_to_left % 2
+                                    } else {
+                                        0
+                                    },
+                                loop_layers_to_left,
+                            ),
+                        },
+                    )
+                    .0
             })
             .sum()
     }
