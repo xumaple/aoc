@@ -19,6 +19,7 @@ mod d10;
 mod d11;
 mod d12;
 mod d13;
+mod d14;
 
 fn main() -> NulBoxError {
     let args = CliArgs::parse();

@@ -9,6 +9,7 @@ pub use num::integer::lcm;
 pub use std::cmp::{Eq, Ord, Ordering, PartialEq, PartialOrd};
 pub use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 pub use std::fmt::Debug;
+pub use std::hash::Hash;
 pub use std::ops::Range;
 pub use std::path::Path;
 pub use std::str::FromStr;
@@ -16,6 +17,8 @@ pub use std::str::FromStr;
 pub mod aoc;
 pub mod error;
 pub use error::*;
+pub mod grid;
+pub use grid::*;
 pub mod string;
 pub use string::*;
 pub mod math;
@@ -29,6 +32,11 @@ pub fn read<P: AsRef<Path>>(path: P) -> io::Result<String> {
 pub fn read_lines<P: AsRef<Path>>(filename: P) -> io::Result<Lines<BufReader<File>>> {
     let file = File::open(filename)?;
     Ok(BufReader::new(file).lines())
+}
+
+pub fn debug<T: Debug>(input: T) -> T {
+    println!("{:?}", input);
+    input
 }
 
 pub trait UnsafeFrom<T>: Sized {
