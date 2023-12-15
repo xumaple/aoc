@@ -45,11 +45,11 @@ impl<'a> Box<'a> {
         }
     }
 
-    pub fn totals(&self, box_num: u8) -> IntType {
-        let box_num = 1 + box_num as IntType;
-        self.0.iter().enumerate().fold(0, |acc, (i, (_, num))| {
-            acc + box_num * (i as IntType + 1) * num
-        })
+    pub fn totals(&self) -> IntType {
+        self.0
+            .iter()
+            .enumerate()
+            .fold(0, |acc, (i, (_, num))| acc + (i as IntType + 1) * num)
     }
 }
 
@@ -78,7 +78,7 @@ impl<'a> Boxes<'a> {
         self.0
             .iter()
             .enumerate()
-            .map(|(box_num, b)| b.totals(box_num as u8))
+            .map(|(box_num, b)| (1 + box_num) as IntType * b.totals())
             .sum()
     }
 }
