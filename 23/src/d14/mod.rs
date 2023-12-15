@@ -65,7 +65,7 @@ impl Rocks {
 
     pub fn total_load_after_rotates(mut self, rotations: IntType) -> IntType {
         let mut c = Cycles::<IntType>::new();
-        let mut cycle_length = 0;
+        let cycle_length;
         let mut i = 0;
         let mut load = 0;
         loop {
@@ -75,8 +75,6 @@ impl Rocks {
                 load = t.1;
             }
             i += 1;
-            // debug(load);
-            // debug(&self.0);
             if let Some(l) = c.add(load) {
                 cycle_length = l;
                 break;
@@ -86,10 +84,8 @@ impl Rocks {
             for _ in 0..4 {
                 let t = self.total_load_mut_then_rotate();
                 self = t.0;
-                load = t.1;
             }
         }
-        // debug(self);
         self.load()
     }
 
