@@ -33,6 +33,14 @@ impl<T> Grid<T> {
     pub fn iter_rows_mut<'a>(&'a mut self) -> std::slice::IterMut<Vec<T>> {
         self.0.iter_mut()
     }
+
+    pub fn iter(&self) -> impl Iterator<Item = &T> {
+        self.0.iter().flatten()
+    }
+
+    pub fn at(&mut self, coords: (usize, usize)) -> &mut T {
+        &mut self.0[coords.0][coords.1]
+    }
 }
 
 impl<T: Clone + Default + Copy> Grid<T> {

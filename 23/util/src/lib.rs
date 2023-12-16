@@ -10,7 +10,7 @@ pub use std::cmp::{Eq, Ord, Ordering, PartialEq, PartialOrd};
 pub use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 pub use std::fmt::Debug;
 pub use std::hash::Hash;
-pub use std::ops::Range;
+pub use std::ops::{Deref, DerefMut, Range};
 pub use std::path::Path;
 pub use std::str::FromStr;
 
