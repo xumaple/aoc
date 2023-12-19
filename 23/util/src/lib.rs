@@ -7,10 +7,10 @@ use std::io::{self, BufRead, BufReader, Lines};
 pub use itertools::Itertools;
 pub use num::integer::lcm;
 pub use std::cmp::{Eq, Ord, Ordering, PartialEq, PartialOrd};
-pub use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
+pub use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet, LinkedList};
 pub use std::fmt::Debug;
 pub use std::hash::Hash;
-pub use std::ops::{Deref, DerefMut, Range};
+pub use std::ops::{Deref, DerefMut, Index, IndexMut, Range, Sub};
 pub use std::path::Path;
 pub use std::str::FromStr;
 
@@ -43,19 +43,42 @@ pub trait UnsafeFrom<T>: Sized {
     fn ufrom(input: T) -> Self;
 }
 
-impl<T, S> UnsafeFrom<T> for S
+macro_rules! impl_unsafe_from {
+    ($t:ty) => {
+        impl<S> UnsafeFrom<$t> for S
+        where
+            S: FromStr,
+        {
+            fn ufrom(input: $t) -> S {
+                match input.parse::<S>() {
+                    Ok(v) => v,
+                    Err(_) => panic!(
+                        "Unable to parse value: {} from type: {} to type: {}",
+                        input,
+                        type_name::<$t>(),
+                        type_name::<S>(),
+                    ),
+                }
+            }
+        }
+    };
+}
+
+impl_unsafe_from!(String);
+impl_unsafe_from!(&str);
+
+impl<A> UnsafeFrom<char> for A
 where
-    S: FromStr,
-    T: AsRef<str>,
+    A: Number + TryFrom<char> + Sub<A, Output = A>,
 {
-    fn ufrom(input: T) -> S {
-        match input.as_ref().parse::<S>() {
-            Ok(v) => v,
+    fn ufrom(input: char) -> Self {
+        match A::try_from(input) {
+            Ok(v) => v - A::from(0x30).unwrap(),
             Err(_) => panic!(
                 "Unable to parse value: {} from type: {} to type: {}",
-                input.as_ref(),
-                type_name::<T>(),
-                type_name::<S>(),
+                input,
+                type_name::<char>(),
+                type_name::<A>(),
             ),
         }
     }

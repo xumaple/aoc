@@ -9,6 +9,8 @@ edition = "2021"
 thiserror = "1"
 itertools = "0.12"
 num = "0.4"
+num-traits = "0.2"
+num-derive = "0.4"
 proc-macro2 = "1.0"
 # syn = { version = "2.0", features = [ "full" ] }
 quote = "1"

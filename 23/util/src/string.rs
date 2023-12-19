@@ -14,7 +14,7 @@ pub trait SmartString {
         T: UnsafeFrom<&'a str>,
         'func: 'a;
 
-    fn remove_whitespace<'a>(&'a self) -> impl AsRef<str>;
+    fn remove_whitespace<'a>(&'a self) -> String;
 }
 
 impl<S> SmartString for S
@@ -40,7 +40,7 @@ where
         self.as_ref().trim().split_whitespace().map(T::ufrom)
     }
 
-    fn remove_whitespace<'a>(&'a self) -> impl AsRef<str> {
+    fn remove_whitespace<'a>(&'a self) -> String {
         self.as_ref().replace(" ", "")
     }
 }

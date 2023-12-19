@@ -115,16 +115,16 @@ impl Mirrors {
         stack.push((starting, starting_dir));
         while stack.len() > 0 {
             let (coords, dir) = stack.pop().unwrap();
-            let (dir1, dir2_opt) = self.0.at(coords).bounce(dir);
+            let (dir1, dir2_opt) = self.0[coords.0][coords.1].bounce(dir);
             if let Some(coords1) = dir1.next(coords, 0, self.0.len() - 1, 0, self.0.width() - 1) {
-                if !self.0.at(coords1).already_energized(&dir1) {
+                if !self.0[coords1.0][coords1.1].already_energized(&dir1) {
                     stack.push((coords1, dir1));
                 }
             }
             if let Some(dir2) = dir2_opt {
                 if let Some(coords2) = dir2.next(coords, 0, self.0.len() - 1, 0, self.0.width() - 1)
                 {
-                    if !self.0.at(coords2).already_energized(&dir2) {
+                    if !self.0[coords2.0][coords2.1].already_energized(&dir2) {
                         stack.push((coords2, dir2));
                     }
                 }
