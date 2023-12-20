@@ -5,14 +5,14 @@ use crate::*;
 use num_derive::FromPrimitive;
 use num_traits::FromPrimitive;
 
-#[derive(Copy)]
-pub struct Position<'a, T> {
+#[derive(Copy, PartialEq, Eq, Hash)]
+pub struct Position<T> {
     pub x: usize,
     pub y: usize,
-    grid: Option<&'a Grid<T>>,
+    pub grid: Option<*const Grid<T>>,
 }
 
-impl<'a, T> Debug for Position<'a, T> {
+impl<'a, T> Debug for Position<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "({}, {})", self.x, self.y)
     }
@@ -52,7 +52,7 @@ impl UnsafeFrom<u8> for Direction {
     }
 }
 
-impl<'a, T> Position<'a, T> {
+impl<'a, T> Position<T> {
     pub fn tuple(&self) -> (usize, usize) {
         (self.x, self.y)
     }
@@ -61,16 +61,16 @@ impl<'a, T> Position<'a, T> {
         if match dir {
             Direction::U => self.x <= 0,
             Direction::D => {
-                if let Some(grid) = self.grid {
-                    self.x >= grid.len() - 1
+                if let Some(len) = self.len() {
+                    self.x >= len - 1
                 } else {
                     false
                 }
             }
             Direction::L => self.y <= 0,
             Direction::R => {
-                if let Some(grid) = self.grid {
-                    self.y >= grid.width() - 1
+                if let Some(width) = self.width() {
+                    self.y >= width - 1
                 } else {
                     false
                 }
@@ -96,35 +96,48 @@ impl<'a, T> Position<'a, T> {
         }
     }
 
-    pub fn new(x: usize, y: usize, grid: Option<&'a Grid<T>>) -> Self {
+    pub fn new(x: usize, y: usize, grid: Option<*const Grid<T>>) -> Self {
         Self::assert_within_range(x, y, grid);
         Self { x, y, grid }
     }
 
-    pub fn new_from_tuple(coords: (usize, usize), grid: Option<&'a Grid<T>>) -> Self {
+    pub fn new_from_tuple(coords: (usize, usize), grid: Option<*const Grid<T>>) -> Self {
+        Self::assert_within_range(coords.0, coords.1, grid);
         Self::new(coords.0, coords.1, grid)
     }
 
-    pub fn refresh_lifetime<'b>(self, new_grid: &'b Grid<T>) -> Position<'b, T> {
-        Position::new(self.x, self.y, Some(new_grid))
-    }
-
-    fn assert_within_range(x: usize, y: usize, grid: Option<&'a Grid<T>>) {
+    fn is_within_range(x: usize, y: usize, grid: Option<*const Grid<T>>) -> bool {
         if let Some(grid) = grid {
-            if x < grid.len() && y < grid.width() {
-                return;
-            }
-            println!("x: {x} <? {}; y: {y} <? {}", grid.len(), grid.width());
-            assert!(x < grid.len() && y < grid.width());
+            unsafe { x < (*grid).len() && y < (*grid).width() }
+        } else {
+            true
         }
     }
 
-    pub fn pos<O>(&self) -> Position<'static, O> {
-        Position::new(self.x, self.y, None)
+    fn assert_within_range(x: usize, y: usize, grid: Option<*const Grid<T>>) {
+        if !Self::is_within_range(x, y, grid) {
+            assert!(false)
+        }
+    }
+
+    fn width(&self) -> Option<usize> {
+        if let Some(grid) = self.grid {
+            Some(unsafe { (*grid).width() })
+        } else {
+            None
+        }
+    }
+
+    fn len(&self) -> Option<usize> {
+        if let Some(grid) = self.grid {
+            Some(unsafe { (*grid).len() })
+        } else {
+            None
+        }
     }
 }
 
-impl<'a, T> Clone for Position<'a, T> {
+impl<'a, T> Clone for Position<T> {
     fn clone(&self) -> Self {
         Self {
             x: self.x,
@@ -174,6 +187,17 @@ impl<T> Grid<T> {
 
     pub fn iter(&self) -> impl Iterator<Item = &T> {
         self.0.iter().flatten()
+    }
+
+    pub fn enumerate<'a>(&'a self) -> impl Iterator<Item = (Position<T>, &T)> {
+        self.iter_rows()
+            .enumerate()
+            .map(move |(x, v)| {
+                v.iter()
+                    .enumerate()
+                    .map(move |(y, val)| (Position::new(x, y, Some(self)), val))
+            })
+            .flatten()
     }
 }
 
@@ -226,15 +250,15 @@ impl<T, I: SliceIndex<[Vec<T>]>> IndexMut<I> for Grid<T> {
     }
 }
 
-impl<'a, T> Index<Position<'a, T>> for Grid<T> {
+impl<'a, T> Index<Position<T>> for Grid<T> {
     type Output = T;
-    fn index(&self, index: Position<'a, T>) -> &Self::Output {
+    fn index(&self, index: Position<T>) -> &Self::Output {
         &self[index.x][index.y]
     }
 }
 
-impl<'a, T> IndexMut<Position<'a, T>> for Grid<T> {
-    fn index_mut(&mut self, index: Position<'a, T>) -> &mut Self::Output {
+impl<'a, T> IndexMut<Position<T>> for Grid<T> {
+    fn index_mut(&mut self, index: Position<T>) -> &mut Self::Output {
         &mut self[index.x][index.y]
     }
 }

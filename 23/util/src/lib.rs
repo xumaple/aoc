@@ -6,15 +6,19 @@ use std::io::{self, BufRead, BufReader, Lines};
 
 pub use itertools::Itertools;
 pub use num::integer::lcm;
+pub use rc_cell::*;
+pub use std::cell::{Ref, RefMut};
 pub use std::cmp::{Eq, Ord, Ordering, PartialEq, PartialOrd};
-pub use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet, LinkedList};
+pub use std::collections::{BTreeMap, BTreeSet, BinaryHeap, HashMap, HashSet, LinkedList};
 pub use std::fmt::Debug;
 pub use std::hash::Hash;
-pub use std::ops::{Deref, DerefMut, Index, IndexMut, Range, Sub};
+pub use std::ops::{Add, Deref, DerefMut, Index, IndexMut, Range, Sub};
 pub use std::path::Path;
 pub use std::str::FromStr;
 
+pub mod algorithm;
 pub mod aoc;
+pub use algorithm::*;
 pub mod error;
 pub use error::*;
 pub mod grid;

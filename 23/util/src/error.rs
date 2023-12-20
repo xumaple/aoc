@@ -9,4 +9,6 @@ pub enum E {
     ParseError,
     #[error("Unable to parse command line: {0}")]
     CommandLineError(&'static str),
+    #[error("Algorithm error: {0}")]
+    AlgorithmError(&'static str),
 }
