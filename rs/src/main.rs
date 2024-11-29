@@ -23,19 +23,30 @@ fn main() -> NulBoxError {
         ))?;
     }
 
-    println!("AoC 2023 Results:");
+    println!("AoC Results:");
     get_all_runs!()
         .iter()
-        .group_by(|run| run.day)
+        .group_by(|run| run.year)
         .into_iter()
-        .map(|(day, runs)| -> NulBoxError {
-            println!("   -----{day}-----");
+        .map(|(year, runs)| -> NulBoxError {
+            println!("------{year}------\n");
+            // println!("{runs}");
             runs.sorted()
-                .map(|runner| -> NulBoxError {
-                    println!("    Part {}: {}", runner.part, run!(runner, "input.txt")?);
+                .group_by(|run| run.day)
+                .into_iter()
+                .map(|(day, runs)| -> NulBoxError {
+                    println!("  -----{day}-----");
+                    runs.sorted()
+                        .map(|runner| -> NulBoxError {
+                            println!("   Part {}: {}", runner.part, run!(runner, "input.txt")?);
+                            Ok(())
+                        })
+                        .collect::<Result<Vec<()>, BoxError>>()?;
+                    println!("");
                     Ok(())
                 })
                 .collect::<Result<Vec<()>, BoxError>>()?;
+            println!("");
             Ok(())
         })
         .collect::<Result<Vec<()>, BoxError>>()?;
