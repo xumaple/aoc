@@ -1,5 +1,4 @@
 #![feature(iter_array_chunks)]
-#![feature(slice_group_by)]
 
 use aoc_proc::{get_all_runs, run};
 use util::aoc::*;
@@ -22,7 +21,7 @@ mod d13;
 mod d14;
 mod d15;
 mod d16;
-mod d17;
+// mod d17;
 
 fn main() -> NulBoxError {
     let args = CliArgs::parse();

@@ -6,7 +6,7 @@ use std::string::ToString;
 pub trait SmartString {
     fn ssplit_once<'a, P>(&'a self, delimiter: P) -> (&'a str, &'a str)
     where
-        P: std::str::pattern::Pattern<'a> + ToString + Clone;
+        P: std::str::pattern::Pattern + ToString + Clone;
 
     fn split_whitespace_parse<'a, 'func, T>(&'func self) -> impl Iterator<Item = T>
     where
@@ -23,7 +23,7 @@ where
 {
     fn ssplit_once<'a, P>(&'a self, delimiter: P) -> (&'a str, &'a str)
     where
-        P: std::str::pattern::Pattern<'a> + ToString + Clone,
+        P: std::str::pattern::Pattern + ToString + Clone,
     {
         self.as_ref()
             .split_once(delimiter.clone())

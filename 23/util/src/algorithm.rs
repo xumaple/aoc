@@ -150,18 +150,13 @@ where
         let mut heap = PQ::new();
         heap.push(start.clone(), start);
 
-        let mut i = 0;
         let n = loop {
-            i += 1;
-            // if i > 20 { break C::inf(); }
             if heap.len() == 0 {
                 return Err(E::AlgorithmError(
                     "Did not find goal node, no more elements in heap",
                 ));
             }
-            // println!("{:?}", heap.clone().into_sorted_vec());
             let (n, _) = heap.pop().unwrap();
-            // println!("{:?}", n);
             if self.is_goal(&n.inner()) {
                 break n;
             }
@@ -172,7 +167,6 @@ where
                     let m = nodes_map.entry(m).or_insert_with(|| DijkstrasNode::from(m));
                     let new_cost = n.cost + cost;
                     if new_cost < m.cost {
-                        // println!("curr: {:?}; next: {:?}; cost: {:?}; new_cost: {:?}", n.inner(), m.inner(), m.cost, new_cost);
                         let mut m = m.clone();
                         m.cost = new_cost;
                         m.prev = Some(RcCell::from(n.clone()));

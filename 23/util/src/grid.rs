@@ -177,11 +177,11 @@ impl<T> Grid<T> {
         self.0[0].len()
     }
 
-    pub fn iter_rows<'a>(&'a self) -> std::slice::Iter<Vec<T>> {
+    pub fn iter_rows(&self) -> std::slice::Iter<Vec<T>> {
         self.0.iter()
     }
 
-    pub fn iter_rows_mut<'a>(&'a mut self) -> std::slice::IterMut<Vec<T>> {
+    pub fn iter_rows_mut(&mut self) -> std::slice::IterMut<Vec<T>> {
         self.0.iter_mut()
     }
 
@@ -189,7 +189,7 @@ impl<T> Grid<T> {
         self.0.iter().flatten()
     }
 
-    pub fn enumerate<'a>(&'a self) -> impl Iterator<Item = (Position<T>, &T)> {
+    pub fn enumerate(&self) -> impl Iterator<Item = (Position<T>, &T)> {
         self.iter_rows()
             .enumerate()
             .map(move |(x, v)| {
