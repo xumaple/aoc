@@ -6,6 +6,7 @@ use util::Itertools;
 use util::NulBoxError;
 
 mod y23;
+mod y24;
 
 fn main() -> NulBoxError {
     let args = CliArgs::parse();
