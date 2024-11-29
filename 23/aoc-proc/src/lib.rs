@@ -130,18 +130,18 @@ pub fn run(run: proc_macro::TokenStream) -> proc_macro::TokenStream {
         let runner = quote::format_ident!("Runner{}", run_key.to_string());
         match &filename {
             StrLitOrExpr::LitStr(filename_lit) => {
-                let input_file_ = format!("src/d{}/{}", run_key.day.num_repr(), filename_lit.value());
+                let input_file_ = format!("src/y23/d{}/{}", run_key.day.num_repr(), filename_lit.value());
                 quote!(
                     (#day_, #part_) => {
-                        crate::#day_mod_::#part_mod_::#runner {}.solve(#input_file_)
+                        crate::y23::#day_mod_::#part_mod_::#runner {}.solve(#input_file_)
                     }
                 )
             },
             StrLitOrExpr::Expr(filename_expr) => {
-                let input_file_ = format!("src/d{}", run_key.day.num_repr());
+                let input_file_ = format!("src/y23/d{}", run_key.day.num_repr());
                 quote!(
                     (#day_, #part_) => {
-                        crate::#day_mod_::#part_mod_::#runner {}.solve(format!("{}/{}", #input_file_, #filename_expr))
+                        crate::y23::#day_mod_::#part_mod_::#runner {}.solve(format!("{}/{}", #input_file_, #filename_expr))
                     }
                 )
             }
