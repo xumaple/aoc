@@ -28,6 +28,10 @@ where
         .into()
 }
 
+fn get_runner_ident(run: &Run) -> Ident {
+    quote::format_ident!("Runner{}", run.alphanumeric_repr())
+}
+
 #[proc_macro_attribute]
 pub fn aoc_run(
     attr: proc_macro::TokenStream,
@@ -47,7 +51,7 @@ pub fn aoc_run(
             );
         }
     };
-    let runner = quote::format_ident!("Runner{}", run.to_string());
+    let runner = get_runner_ident(&run);
 
     let item_clone = item.clone();
     let (fn_name, fn_definition) = check_item(parse_macro_input!(item_clone as ItemFn));
@@ -112,25 +116,27 @@ pub fn run(run: proc_macro::TokenStream) -> proc_macro::TokenStream {
 
     let runs = REGISTERED_RUNS.lock().unwrap();
     let run_arms = runs.iter().map(|run_key| {
-        let part_ = run_key.part;
+        let year_ = run_key.year;
         let day_ = run_key.day;
+        let part_ = run_key.part;
+        let year_mod_ = quote::format_ident!("y{}", run_key.year.num_repr());
         let day_mod_ = quote::format_ident!("d{}", run_key.day.num_repr());
         let part_mod_ = quote::format_ident!("{}", run_key.part.lower_repr());
-        let runner = quote::format_ident!("Runner{}", run_key.to_string());
+        let runner = get_runner_ident(run_key);
         match &filename {
             StrLitOrExpr::LitStr(filename_lit) => {
-                let input_file_ = format!("src/y23/d{}/{}", run_key.day.num_repr(), filename_lit.value());
+                let input_file_ = format!("src/y{}/d{}/{}", run_key.year.num_repr(), run_key.day.num_repr(), filename_lit.value());
                 quote!(
-                    (#day_, #part_) => {
-                        crate::y23::#day_mod_::#part_mod_::#runner {}.solve(#input_file_)
+                    (#year_, #day_, #part_) => {
+                        crate::#year_mod_::#day_mod_::#part_mod_::#runner {}.solve(#input_file_)
                     }
                 )
             },
             StrLitOrExpr::Expr(filename_expr) => {
-                let input_file_ = format!("src/y23/d{}", run_key.day.num_repr());
+                let input_file_ = format!("src/y{}/d{}", run_key.year.num_repr(), run_key.day.num_repr());
                 quote!(
-                    (#day_, #part_) => {
-                        crate::y23::#day_mod_::#part_mod_::#runner {}.solve(format!("{}/{}", #input_file_, #filename_expr))
+                    (#year_, #day_, #part_) => {
+                        crate::#year_mod_::#day_mod_::#part_mod_::#runner {}.solve(format!("{}/{}", #input_file_, #filename_expr))
                     }
                 )
             }
@@ -138,7 +144,7 @@ pub fn run(run: proc_macro::TokenStream) -> proc_macro::TokenStream {
     });
 
     quote!(
-        match (#run_.day, #run_.part) {
+        match (#run_.year, #run_.day, #run_.part) {
             #(#run_arms)*
             _ => panic!("Unregistered run {}", #run_)
         }

@@ -259,7 +259,24 @@ pub struct Run {
 
 impl Display for Run {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}{}", self.day.num_repr(), self.part.to_string())
+        write!(
+            f,
+            "{}-{}{}",
+            self.year.num_repr(),
+            self.day.num_repr(),
+            self.part.to_string()
+        )
+    }
+}
+
+impl Run {
+    pub fn alphanumeric_repr(&self) -> String {
+        format!(
+            "{}{}{}",
+            self.year.num_repr(),
+            self.day.num_repr(),
+            self.part.to_string()
+        )
     }
 }
 
