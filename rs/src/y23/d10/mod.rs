@@ -193,12 +193,12 @@ mod test_a {
 
     #[test]
     fn sample() {
-        assert_eq!(run(read("src/d10/sample-a.txt").unwrap()).unwrap(), 8);
+        assert_eq!(run(read("src/y23/d10/sample-a.txt").unwrap()).unwrap(), 8);
     }
 
     #[test]
     fn offical() {
-        assert_eq!(run(read("src/d10/input.txt").unwrap()).unwrap(), 6882);
+        assert_eq!(run(read("src/y23/d10/input.txt").unwrap()).unwrap(), 6882);
     }
 }
 
@@ -209,11 +209,11 @@ mod test_b {
 
     #[test]
     fn sample() {
-        assert_eq!(run(read("src/d10/sample-b.txt").unwrap()).unwrap(), 8);
+        assert_eq!(run(read("src/y23/d10/sample-b.txt").unwrap()).unwrap(), 8);
     }
 
     #[test]
     fn offical() {
-        assert_eq!(run(read("src/d10/input.txt").unwrap()).unwrap(), 491);
+        assert_eq!(run(read("src/y23/d10/input.txt").unwrap()).unwrap(), 491);
     }
 }

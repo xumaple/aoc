@@ -5,6 +5,7 @@ use util::aoc::*;
 use util::Itertools;
 use util::NulBoxError;
 
+mod y22;
 mod y23;
 mod y24;
 

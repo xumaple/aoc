@@ -9,6 +9,7 @@ use quote::{ToTokens, TokenStreamExt};
 
 #[derive(Clone, Copy, Eq, PartialEq, PartialOrd, Ord)]
 pub enum Year {
+    Y22,
     Y23,
     Y24,
 }
@@ -16,6 +17,7 @@ pub enum Year {
 impl Year {
     pub fn num_repr(&self) -> &'static str {
         match self {
+            Year::Y22 => "22",
             Year::Y23 => "23",
             Year::Y24 => "24",
         }
@@ -55,6 +57,7 @@ impl FromStr for Year {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
+            "22" => Ok(Year::Y22),
             "23" => Ok(Year::Y23),
             "24" => Ok(Year::Y24),
             _ => {
