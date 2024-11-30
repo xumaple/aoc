@@ -9,7 +9,9 @@ pub use num::integer::lcm;
 pub use rc_cell::*;
 pub use std::cell::{Ref, RefMut};
 pub use std::cmp::{Eq, Ord, Ordering, PartialEq, PartialOrd};
-pub use std::collections::{BTreeMap, BTreeSet, BinaryHeap, HashMap, HashSet, LinkedList};
+pub use std::collections::{
+    BTreeMap, BTreeSet, BinaryHeap, HashMap, HashSet, LinkedList, VecDeque,
+};
 pub use std::fmt::Debug;
 pub use std::hash::Hash;
 pub use std::iter::FromIterator;
