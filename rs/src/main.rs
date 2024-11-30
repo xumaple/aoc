@@ -28,13 +28,13 @@ fn main() -> NulBoxError {
     println!("AoC Results:");
     get_all_runs!()
         .iter()
-        .group_by(|run| run.year)
+        .chunk_by(|run| run.year)
         .into_iter()
         .map(|(year, runs)| -> NulBoxError {
             println!("------{year}------\n");
             // println!("{runs}");
             runs.sorted()
-                .group_by(|run| run.day)
+                .chunk_by(|run| run.day)
                 .into_iter()
                 .map(|(day, runs)| -> NulBoxError {
                     println!("  -----{day}-----");
