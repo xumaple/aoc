@@ -17,5 +17,5 @@ pub struct CliArgs {
 // !!! Warning: If changing this trait, make sure to also change its
 // default implementation in aoc-proc/lib.rs
 pub trait Runner: Debug {
-    fn solve(&self, filename: impl AsRef<Path>) -> Result<u64, BoxError>;
+    fn solve(&self, filename: impl AsRef<Path>) -> Result<String, BoxError>;
 }

@@ -65,8 +65,8 @@ pub fn aoc_run(
         #[derive(Clone, Debug)]
         pub struct #runner;
         impl util::aoc::Runner for #runner {
-            fn solve(&self, filename: impl AsRef<Path>) -> Result<u64, util::BoxError> {
-                Ok(#fn_name(util::read(filename)?)?.uinton())
+            fn solve(&self, filename: impl AsRef<Path>) -> Result<String, util::BoxError> {
+                Ok(#fn_name(util::read(filename)?)?.to_string())
             }
         }
 
