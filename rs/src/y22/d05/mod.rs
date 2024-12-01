@@ -5,8 +5,6 @@ use util::*;
 pub mod a;
 pub mod b;
 
-pub type IntType = u32;
-
 #[derive(Debug, Clone)]
 struct Crates {
     crates: Vec<VecDeque<char>>,
