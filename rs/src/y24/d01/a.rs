@@ -1,13 +1,5 @@
 use super::*;
 
-fn diff(a: IntType, b: IntType) -> IntType {
-    if a > b {
-        a - b
-    } else {
-        b - a
-    }
-}
-
 #[aoc_proc::aoc_run(24-01a)]
 pub fn run(input: impl AsRef<str>) -> Result<IntType, BoxError> {
     let (v1, v2) = input.as_ref().lines().fold(
@@ -23,7 +15,7 @@ pub fn run(input: impl AsRef<str>) -> Result<IntType, BoxError> {
         .into_iter()
         .sorted()
         .zip(v2.into_iter().sorted())
-        .map(|(a, b)| diff(a, b))
+        .map(|(a, b)| abs_diff(a, b))
         .sum();
     Ok(sum)
 }

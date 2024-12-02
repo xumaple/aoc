@@ -1,4 +1,5 @@
 #![feature(iter_array_chunks)]
+#![feature(iterator_try_reduce)]
 
 use aoc_proc::{get_all_runs, run};
 use util::aoc::*;

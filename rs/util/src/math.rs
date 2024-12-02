@@ -93,3 +93,14 @@ where
         B::ufromn(self)
     }
 }
+
+pub fn abs_diff<N>(a: N, b: N) -> N
+where
+    N: std::ops::Sub<Output = N> + std::cmp::PartialOrd,
+{
+    if a > b {
+        a - b
+    } else {
+        b - a
+    }
+}
