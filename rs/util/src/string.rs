@@ -8,6 +8,20 @@ pub trait SmartString {
     where
         P: std::str::pattern::Pattern + ToString + Clone;
 
+    fn before<'a, P>(&'a self, delimiter: P) -> &'a str
+    where
+        P: std::str::pattern::Pattern + ToString + Clone,
+    {
+        self.ssplit_once(delimiter).0
+    }
+
+    fn after<'a, P>(&'a self, delimiter: P) -> &'a str
+    where
+        P: std::str::pattern::Pattern + ToString + Clone,
+    {
+        self.ssplit_once(delimiter).1
+    }
+
     fn split_whitespace_parse<'a, 'func, T>(&'func self) -> impl Iterator<Item = T>
     where
         // Self: Sized,

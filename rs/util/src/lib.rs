@@ -7,6 +7,7 @@ use std::io::{self, BufRead, BufReader, Lines};
 pub use itertools::Itertools;
 pub use num::integer::lcm;
 pub use rc_cell::*;
+pub use regex::Regex;
 pub use std::cell::{Ref, RefMut};
 pub use std::cmp::{Eq, Ord, Ordering, PartialEq, PartialOrd};
 pub use std::collections::{

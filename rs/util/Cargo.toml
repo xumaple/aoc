@@ -17,3 +17,4 @@ proc-macro2 = "1.0"
 quote = "1"
 rc-cell = "0.1"
 clap = { version = "4", features = ["derive"] }
+regex = "1.11"
