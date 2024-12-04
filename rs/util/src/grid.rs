@@ -5,14 +5,28 @@ use crate::*;
 use num_derive::FromPrimitive;
 use num_traits::FromPrimitive;
 
+#[derive(Copy, Clone, Default, Debug, PartialEq, Eq, Hash)]
+pub struct Position {
+    pub x: usize,
+    pub y: usize,
+}
+
+pub type PositionT<T> = (Position, T);
+
+impl Position {
+    pub fn new(x: usize, y: usize) -> Self {
+        Self { x, y }
+    }
+}
+
 #[derive(Copy, PartialEq, Eq, Hash)]
-pub struct Position<T> {
+pub struct PositionPtr<T> {
     pub x: usize,
     pub y: usize,
     pub grid: Option<*const Grid<T>>,
 }
 
-impl<'a, T> Debug for Position<T> {
+impl<'a, T> Debug for PositionPtr<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "({}, {})", self.x, self.y)
     }
@@ -52,12 +66,12 @@ impl UnsafeFrom<u8> for Direction {
     }
 }
 
-impl<'a, T> Position<T> {
+impl<'a, T> PositionPtr<T> {
     pub fn tuple(&self) -> (usize, usize) {
         (self.x, self.y)
     }
 
-    pub fn next(&self, dir: Direction) -> Option<Position<T>> {
+    pub fn next(&self, dir: Direction) -> Option<PositionPtr<T>> {
         if match dir {
             Direction::U => self.x <= 0,
             Direction::D => {
@@ -137,7 +151,7 @@ impl<'a, T> Position<T> {
     }
 }
 
-impl<'a, T> Clone for Position<T> {
+impl<'a, T> Clone for PositionPtr<T> {
     fn clone(&self) -> Self {
         Self {
             x: self.x,
@@ -189,15 +203,31 @@ impl<T> Grid<T> {
         self.0.iter().flatten()
     }
 
-    pub fn enumerate(&self) -> impl Iterator<Item = (Position<T>, &T)> {
-        self.iter_rows()
-            .enumerate()
-            .map(move |(x, v)| {
-                v.iter()
-                    .enumerate()
-                    .map(move |(y, val)| (Position::new(x, y, Some(self)), val))
-            })
-            .flatten()
+    pub fn iter_mut(&mut self) -> impl Iterator<Item = &mut T> {
+        self.0.iter_mut().flatten()
+    }
+
+    pub fn enumerate(&self) -> impl Iterator<Item = impl Iterator<Item = (PositionPtr<T>, &T)>> {
+        self.iter_rows().enumerate().map(move |(x, v)| {
+            v.iter()
+                .enumerate()
+                .map(move |(y, val)| (PositionPtr::new(x, y, Some(self)), val))
+        })
+    }
+
+    pub fn into_enumerated(self) -> Grid<PositionT<T>> {
+        Grid(
+            self.0
+                .into_iter()
+                .enumerate()
+                .map(|(x, v)| {
+                    v.into_iter()
+                        .enumerate()
+                        .map(|(y, val)| (Position::new(x, y), val))
+                        .collect_vec()
+                })
+                .collect_vec(),
+        )
     }
 }
 
@@ -214,6 +244,7 @@ impl<T: Clone + Default + Copy> Grid<T> {
         ))
     }
 
+    /// Rotates grid clockwise
     pub fn rotate(self) -> Self {
         Self(
             self.iter_cols()
@@ -224,6 +255,26 @@ impl<T: Clone + Default + Copy> Grid<T> {
 
     pub fn iter_cols(&self) -> impl Iterator<Item = Vec<T>> {
         self.clone().invert().0.into_iter()
+    }
+
+    /// iter diagonally, positive slope:
+    /// [ 0, 1, 2,
+    ///   3, 4, 5,
+    ///   6, 7, 8 ] would yield:
+    /// [0],
+    /// [3, 1],
+    /// [6, 4, 2],
+    /// [7, 5],
+    /// [8]
+    pub fn iter_diags_positive(&self) -> impl Iterator<Item = Vec<T>> + use<'_, T> {
+        (0..2 * self.len() - 1).map(|idx| {
+            match idx < self.len() {
+                true => 0..idx + 1,
+                false => idx - self.len() + 1..self.len(),
+            }
+            .map(|idy| self[idx - idy][idy])
+            .collect_vec()
+        })
     }
 }
 
@@ -250,15 +301,36 @@ impl<T, I: SliceIndex<[Vec<T>]>> IndexMut<I> for Grid<T> {
     }
 }
 
-impl<'a, T> Index<Position<T>> for Grid<T> {
+impl<'a, T> Index<PositionPtr<T>> for Grid<T> {
     type Output = T;
-    fn index(&self, index: Position<T>) -> &Self::Output {
+    fn index(&self, index: PositionPtr<T>) -> &Self::Output {
         &self[index.x][index.y]
     }
 }
 
-impl<'a, T> IndexMut<Position<T>> for Grid<T> {
-    fn index_mut(&mut self, index: Position<T>) -> &mut Self::Output {
+impl<'a, T> IndexMut<PositionPtr<T>> for Grid<T> {
+    fn index_mut(&mut self, index: PositionPtr<T>) -> &mut Self::Output {
         &mut self[index.x][index.y]
+    }
+}
+
+#[cfg(test)]
+mod grid_tests {
+    use super::Grid;
+    use itertools::Itertools;
+    use std::str::FromStr;
+
+    #[test]
+    fn iter_diags_positive() {
+        let g = Grid::<u32>::from_str("012\n345\n678").unwrap();
+        let s = g
+            .iter_diags_positive()
+            .map(|v| {
+                v.into_iter()
+                    .map(|i| char::from_digit(i, 10).unwrap())
+                    .collect::<String>()
+            })
+            .join("");
+        assert_eq!(s, "031642758");
     }
 }

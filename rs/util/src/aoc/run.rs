@@ -1,4 +1,4 @@
-use crate::E;
+use crate::{SmartString, E};
 use std::{
     fmt::{Debug, Display},
     str::FromStr,
@@ -286,6 +286,7 @@ impl Run {
 impl FromStr for Run {
     type Err = E;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let s = s.remove_whitespace();
         if s.len() != 6 || &s[2..3] != "-" {
             println!("Unable to parse {s} into `Run` {}", s);
             return Err(E::ParseError);

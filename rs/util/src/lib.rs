@@ -18,7 +18,7 @@ pub use std::hash::Hash;
 pub use std::iter::FromIterator;
 pub use std::ops::{Add, Deref, DerefMut, Index, IndexMut, Range, Sub};
 pub use std::path::Path;
-pub use std::str::FromStr;
+pub use std::str::{FromStr, pattern::Pattern};
 
 pub mod algorithm;
 pub mod aoc;
@@ -89,6 +89,12 @@ where
                 type_name::<A>(),
             ),
         }
+    }
+}
+
+impl UnsafeFrom<char> for char {
+    fn ufrom(input: char) -> Self {
+        input
     }
 }
 

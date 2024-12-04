@@ -29,6 +29,12 @@ pub trait SmartString {
         'func: 'a;
 
     fn remove_whitespace<'a>(&'a self) -> String;
+
+    fn rev(&self) -> String;
+
+    fn indices<'a, P>(&'a self, pattern: P) -> impl Iterator<Item = usize>
+    where
+        P: std::str::pattern::Pattern + ToString + Clone;
 }
 
 impl<S> SmartString for S
@@ -56,6 +62,16 @@ where
 
     fn remove_whitespace<'a>(&'a self) -> String {
         self.as_ref().replace(" ", "")
+    }
+
+    fn rev(&self) -> String {
+        self.as_ref().chars().rev().collect::<String>()
+    }
+
+    fn indices<'a, P>(&'a self, pattern: P) -> impl Iterator<Item = usize>
+        where
+            P: std::str::pattern::Pattern + ToString + Clone {
+        self.as_ref().match_indices(pattern).map(|(idx, _)| idx)
     }
 }
 
