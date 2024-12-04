@@ -314,6 +314,19 @@ impl<'a, T> IndexMut<PositionPtr<T>> for Grid<T> {
     }
 }
 
+impl<'a, T> Index<Position> for Grid<T> {
+    type Output = T;
+    fn index(&self, index: Position) -> &Self::Output {
+        &self[index.x][index.y]
+    }
+}
+
+impl<'a, T> IndexMut<Position> for Grid<T> {
+    fn index_mut(&mut self, index: Position) -> &mut Self::Output {
+        &mut self[index.x][index.y]
+    }
+}
+
 #[cfg(test)]
 mod grid_tests {
     use super::Grid;
