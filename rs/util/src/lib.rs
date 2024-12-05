@@ -4,6 +4,7 @@ use std::any::type_name;
 use std::fs::File;
 use std::io::{self, BufRead, BufReader, Lines};
 
+pub use core::str::FromStr;
 pub use itertools::Itertools;
 pub use num::integer::lcm;
 pub use rc_cell::*;
@@ -18,7 +19,7 @@ pub use std::hash::Hash;
 pub use std::iter::FromIterator;
 pub use std::ops::{Add, Deref, DerefMut, Index, IndexMut, Range, Sub};
 pub use std::path::Path;
-pub use std::str::{FromStr, pattern::Pattern};
+pub use std::str::pattern::Pattern;
 
 pub mod algorithm;
 pub mod aoc;
@@ -31,6 +32,8 @@ pub mod string;
 pub use string::*;
 pub mod math;
 pub use math::*;
+pub mod multimap;
+pub use multimap::*;
 
 pub fn read<P: AsRef<Path>>(path: P) -> io::Result<String> {
     let path = path.as_ref();
