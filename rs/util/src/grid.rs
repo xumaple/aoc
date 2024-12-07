@@ -327,6 +327,12 @@ impl<'a, T> IndexMut<Position> for Grid<T> {
     }
 }
 
+impl<T: Default + Clone> Grid<T> {
+    pub fn new_with_dimensions(x: usize, y: usize) -> Self {
+        Self(vec![vec![T::default(); y]; x])
+    }
+}
+
 #[cfg(test)]
 mod grid_tests {
     use super::Grid;
