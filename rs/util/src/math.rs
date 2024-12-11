@@ -104,3 +104,33 @@ where
         b - a
     }
 }
+
+pub trait BoolExt {
+    /// Toggles self and returns previous
+    fn toggle(&mut self) -> Self
+    where
+        Self: Copy;
+
+    /// Toggles self and returns new
+    fn toggle_and_return(&mut self) -> Self
+    where
+        Self: Copy;
+}
+
+impl BoolExt for bool {
+    fn toggle(&mut self) -> Self
+    where
+        Self: Copy,
+    {
+        *self ^= true;
+        *self ^ true
+    }
+
+    fn toggle_and_return(&mut self) -> Self
+    where
+        Self: Copy,
+    {
+        *self ^= true;
+        *self
+    }
+}
