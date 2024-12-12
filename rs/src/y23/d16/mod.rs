@@ -1,4 +1,4 @@
-use grid_map::GridMap;
+use grid_vec::GridVec;
 use util::*;
 
 pub mod a;
@@ -66,12 +66,12 @@ impl Beam {
 }
 
 #[derive(Clone)]
-pub struct Mirrors(GridMap<Beam>);
+pub struct Mirrors(GridVec<Beam>);
 
 impl FromStr for Mirrors {
     type Err = E;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Ok(Self(GridMap::from_str(s)?))
+        Ok(Self(GridVec::from_str(s)?))
     }
 }
 
