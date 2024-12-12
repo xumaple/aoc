@@ -1,4 +1,4 @@
-use super::{Position, Direction};
+use super::{Direction, Position};
 
 pub type BoxError = Box<dyn std::error::Error>;
 pub type NulBoxError = Result<(), BoxError>;

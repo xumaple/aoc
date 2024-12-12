@@ -64,14 +64,20 @@ impl<T> IndexMut<Position> for GridMap<T> {
 impl<T> Index<Cursor<T>> for GridMap<T> {
     type Output = T;
     fn index(&self, cursor: Cursor<T>) -> &Self::Output {
-        self.data.get(&cursor.index).ok_or(E::OutOfBounds(cursor.index)).unwrap()
+        self.data
+            .get(&cursor.index)
+            .ok_or(E::OutOfBounds(cursor.index))
+            .unwrap()
     }
 }
 
 impl<T> Index<CursorMut<T>> for GridMap<T> {
     type Output = T;
     fn index(&self, cursor: CursorMut<T>) -> &Self::Output {
-        self.data.get(&cursor.index).ok_or(E::OutOfBounds(cursor.index)).unwrap()
+        self.data
+            .get(&cursor.index)
+            .ok_or(E::OutOfBounds(cursor.index))
+            .unwrap()
     }
 }
 
@@ -111,11 +117,21 @@ impl<T> GridMap<T> {
         self.width
     }
 
+    /// DEPRECATED. Use `iter_flat`
     pub fn iter(&self) -> impl Iterator<Item = Cursor<T>> + use<'_, T> {
         self.iter_rows().flatten()
     }
 
+    /// DEPRECATED. Use `iter_flat_mut`
     pub fn iter_mut(&mut self) -> impl Iterator<Item = CursorMut<T>> + use<'_, T> {
+        self.iter_rows_mut().flatten()
+    }
+
+    pub fn iter_flat(&self) -> impl Iterator<Item = Cursor<T>> + use<'_, T> {
+        self.iter_rows().flatten()
+    }
+
+    pub fn iter_flat_mut(&mut self) -> impl Iterator<Item = CursorMut<T>> + use<'_, T> {
         self.iter_rows_mut().flatten()
     }
 
@@ -235,7 +251,8 @@ impl<T: Clone> FromIterator<Cursor<T>> for GridMap<T> {
         let mut width = 0;
         Self {
             data: iter
-                .into_iter().map(|cs| {
+                .into_iter()
+                .map(|cs| {
                     len = std::cmp::max(len, cs.index.x);
                     width = std::cmp::max(width, cs.index.y);
                     cs.to_enumerated_tuple()
@@ -247,16 +264,27 @@ impl<T: Clone> FromIterator<Cursor<T>> for GridMap<T> {
     }
 }
 
-#[derive(Copy, Clone, Debug)]
 pub struct Cursor<T> {
     grid: *const GridMap<T>,
     pub index: Position,
 }
 
-#[derive(Copy, Clone, Debug)]
 pub struct CursorMut<T> {
     grid: *mut GridMap<T>,
-    index: Position,
+    pub index: Position,
+}
+
+impl<T> Copy for Cursor<T> {}
+impl<T> Copy for CursorMut<T> {}
+impl<T> Clone for Cursor<T> {
+    fn clone(&self) -> Self {
+        *self
+    }
+}
+impl<T> Clone for CursorMut<T> {
+    fn clone(&self) -> Self {
+        *self
+    }
 }
 
 impl<T> Cursor<T> {
@@ -330,6 +358,18 @@ impl<T> Directional for CursorMut<T> {
 
     fn error(&self, dir: Direction) -> Self::Err {
         E::OutOfBoundsMove(self.index, dir)
+    }
+}
+
+impl<T> Debug for Cursor<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.index.fmt(f)
+    }
+}
+
+impl<T> Debug for CursorMut<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.index.fmt(f)
     }
 }
 

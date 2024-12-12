@@ -1,7 +1,7 @@
 use super::{Direction, Directional, Grid, E};
 pub use std::fmt::Debug;
 
-#[derive(Copy, Clone, Default, Debug, PartialEq, Eq, Hash)]
+#[derive(Copy, Clone, Default, PartialEq, Eq, Hash)]
 pub struct Position {
     pub x: usize,
     pub y: usize,
@@ -12,6 +12,12 @@ pub type PositionT<T> = (Position, T);
 impl Position {
     pub fn new(x: usize, y: usize) -> Self {
         Self { x, y }
+    }
+}
+
+impl Debug for Position {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "({}, {})", self.x, self.y)
     }
 }
 

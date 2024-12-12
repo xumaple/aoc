@@ -1,4 +1,4 @@
-use crate::{UnsafeFrom, UnsafeInto};
+use crate::{PartialEq, UnsafeFrom, UnsafeInto};
 use num_derive::FromPrimitive;
 use num_traits::FromPrimitive;
 
@@ -49,23 +49,35 @@ pub trait Directional: Sized {
     fn next(&self, dir: Direction) -> Option<Self>;
     fn step(&mut self, dir: Direction) -> Result<&Self, Self::Err> {
         match self.next(dir) {
-            Some(new_self) => { *self = new_self; Ok(self) },
-            None => Err(self.error(dir))
+            Some(new_self) => {
+                *self = new_self;
+                Ok(self)
+            }
+            None => Err(self.error(dir)),
         }
     }
     fn error(&self, _dir: Direction) -> Self::Err {
         Self::Err::default()
     }
 
-    fn check_sides<F, R>(&self, mut f: F) -> impl Iterator<Item = Option<R>>
+    fn check_sides<F, R>(&self, mut f: F) -> impl Iterator<Item = R>
     where
-        F: FnMut(Self) -> R,
+        F: FnMut(Option<Self>) -> R,
     {
-        Direction::iter_clockwise().map(move |dir| self.next(dir).map(|dir| f(dir)))
+        Direction::iter_clockwise().map(move |dir| f(self.next(dir)))
     }
 
     // fn check_diagonals<F, R>(&self, mut f: F) -> impl Iterator<Item = Option<R>>
     // where
     //     F: FnMut(Self) -> R,
     // {}
+
+    fn exists_and_matches<F>(&self, dir: Direction, matches: F) -> bool
+    where
+        Self: Copy,
+        F: Fn(Self, Self) -> bool,
+    {
+        self.next(dir)
+            .is_some_and(|new_self| matches(*self, new_self))
+    }
 }
