@@ -117,25 +117,36 @@ impl<T> GridMap<T> {
         self.width
     }
 
+    pub fn cursor(&self, index: Position) -> Cursor<T> {
+        Cursor::new(index, self)
+    }
+
+    pub fn cursor_mut(&mut self, index: Position) -> CursorMut<T> {
+        CursorMut::new(index, self)
+    }
+
     /// DEPRECATED. Use `iter_flat`
-    pub fn iter(&self) -> impl Iterator<Item = Cursor<T>> + use<'_, T> {
+    pub fn iter(&self) -> impl DoubleEndedIterator<Item = Cursor<T>> + use<'_, T> {
         self.iter_rows().flatten()
     }
 
     /// DEPRECATED. Use `iter_flat_mut`
-    pub fn iter_mut(&mut self) -> impl Iterator<Item = CursorMut<T>> + use<'_, T> {
+    pub fn iter_mut(&mut self) -> impl DoubleEndedIterator<Item = CursorMut<T>> + use<'_, T> {
         self.iter_rows_mut().flatten()
     }
 
-    pub fn iter_flat(&self) -> impl Iterator<Item = Cursor<T>> + use<'_, T> {
+    pub fn iter_flat(&self) -> impl DoubleEndedIterator<Item = Cursor<T>> + use<'_, T> {
         self.iter_rows().flatten()
     }
 
-    pub fn iter_flat_mut(&mut self) -> impl Iterator<Item = CursorMut<T>> + use<'_, T> {
+    pub fn iter_flat_mut(&mut self) -> impl DoubleEndedIterator<Item = CursorMut<T>> + use<'_, T> {
         self.iter_rows_mut().flatten()
     }
 
-    pub fn iter_rows(&self) -> impl Iterator<Item = impl Iterator<Item = Cursor<T>> + use<'_, T>> {
+    pub fn iter_rows(
+        &self,
+    ) -> impl DoubleEndedIterator<Item = impl DoubleEndedIterator<Item = Cursor<T>> + use<'_, T>>
+    {
         (0..self.len).into_iter().map(move |x| {
             (0..self.width)
                 .into_iter()
@@ -145,7 +156,8 @@ impl<T> GridMap<T> {
 
     pub fn iter_rows_mut(
         &mut self,
-    ) -> impl Iterator<Item = impl Iterator<Item = CursorMut<T>> + use<'_, T>> {
+    ) -> impl DoubleEndedIterator<Item = impl DoubleEndedIterator<Item = CursorMut<T>> + use<'_, T>>
+    {
         let ptr: *mut GridMap<T> = self;
         (0..self.len).into_iter().map(move |x| {
             (0..self.width)
@@ -154,7 +166,10 @@ impl<T> GridMap<T> {
         })
     }
 
-    pub fn iter_cols(&self) -> impl Iterator<Item = impl Iterator<Item = Cursor<T>> + use<'_, T>> {
+    pub fn iter_cols(
+        &self,
+    ) -> impl DoubleEndedIterator<Item = impl DoubleEndedIterator<Item = Cursor<T>> + use<'_, T>>
+    {
         (0..self.width).into_iter().map(move |y| {
             (0..self.len)
                 .into_iter()
@@ -164,7 +179,8 @@ impl<T> GridMap<T> {
 
     pub fn iter_cols_mut(
         &mut self,
-    ) -> impl Iterator<Item = impl Iterator<Item = CursorMut<T>> + use<'_, T>> {
+    ) -> impl DoubleEndedIterator<Item = impl DoubleEndedIterator<Item = CursorMut<T>> + use<'_, T>>
+    {
         let ptr: *mut GridMap<T> = self;
         (0..self.width).into_iter().map(move |y| {
             (0..self.len)
@@ -173,7 +189,10 @@ impl<T> GridMap<T> {
         })
     }
 
-    pub fn iter_snake(&self) -> impl Iterator<Item = impl Iterator<Item = Cursor<T>> + use<'_, T>> {
+    pub fn iter_snake(
+        &self,
+    ) -> impl DoubleEndedIterator<Item = impl DoubleEndedIterator<Item = Cursor<T>> + use<'_, T>>
+    {
         let max_y = self.width - 1;
         (0..self.len).into_iter().map(move |x| {
             (0..self.width).into_iter().map(move |y| {
@@ -187,7 +206,8 @@ impl<T> GridMap<T> {
 
     pub fn iter_snake_mut(
         &mut self,
-    ) -> impl Iterator<Item = impl Iterator<Item = CursorMut<T>> + use<'_, T>> {
+    ) -> impl DoubleEndedIterator<Item = impl DoubleEndedIterator<Item = CursorMut<T>> + use<'_, T>>
+    {
         let ptr: *mut GridMap<T> = self;
         let max_y = self.width - 1;
         (0..self.len).into_iter().map(move |x| {

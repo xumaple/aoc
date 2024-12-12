@@ -1,9 +1,10 @@
+use grid_map::GridMap;
 use util::*;
 
 pub mod a;
 pub mod b;
 
-pub type IntType = u32;
+pub type IntType = usize;
 
 #[derive(Clone, Default, Copy, PartialEq)]
 pub enum Space {
@@ -38,12 +39,12 @@ impl UnsafeFrom<char> for Space {
     }
 }
 
-pub struct Rocks(Grid<Space>);
+pub struct Rocks(GridMap<Space>);
 
 impl FromStr for Rocks {
     type Err = E;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Ok(Self(Grid::from_str(s)?))
+        Ok(Self(GridMap::from_str(s)?))
     }
 }
 
@@ -59,7 +60,7 @@ impl Rocks {
         self.0
             .iter_rows()
             .enumerate()
-            .map(|(i, v)| v.iter().filter(|&&s| s == Space::Round).count() * (len - i))
+            .map(|(i, row)| row.filter(|s| *s.val() == Space::Round).count() * (len - i))
             .sum::<usize>() as IntType
     }
 
@@ -90,30 +91,32 @@ impl Rocks {
     }
 
     pub fn total_load_mut_then_rotate(mut self) -> (Self, IntType) {
-        self.0 = self.0.rotate();
+        let mut next_curr_lowest = self.0.cursor_mut(Position::new(0, 0));
+        let width = self.0.width();
         let load = self
             .0
-            .iter_rows_mut()
+            .iter_cols_mut()
             .map(|col| {
-                let mut curr_lowest = col.len();
-                let mut acc = 0;
-                for (i, space) in col.clone().iter().enumerate().rev() {
-                    match *space {
-                        Space::Round => {
-                            col[i] = Space::Empty;
-                            col[curr_lowest - 1] = Space::Round;
-                            acc += curr_lowest as IntType;
-                            curr_lowest -= 1;
+                let mut curr_lowest = next_curr_lowest.clone();
+                let _ = next_curr_lowest.step(Direction::R);
+                col.enumerate().fold(0, |acc, (x, mut cs)| match *cs.val() {
+                    Space::Round => {
+                        if curr_lowest.index != cs.index {
+                            std::mem::swap(curr_lowest.val_mut(), cs.val_mut());
                         }
-                        Space::Cube => curr_lowest = i,
-                        Space::Empty => (),
+                        let _ = curr_lowest.step(Direction::D);
+                        acc + width - x
                     }
-                }
-                // debug(acc)
-                acc
+                    Space::Cube => {
+                        curr_lowest = cs;
+                        let _ = curr_lowest.step(Direction::D);
+                        acc
+                    }
+                    Space::Empty => acc,
+                })
             })
             .sum();
-        (self, load)
+        (Self(self.0.rotate_90()), load)
     }
 
     pub fn total_load(&self) -> IntType {
@@ -121,11 +124,10 @@ impl Rocks {
         self.0
             .iter_cols()
             .map(|col| {
-                col.iter()
-                    .enumerate()
+                col.enumerate()
                     .fold(
                         (0 as IntType, 0usize),
-                        |(acc, curr_lowest), (i, space)| match space {
+                        |(acc, curr_lowest), (i, space)| match *space.val() {
                             Space::Round => (acc + len - curr_lowest as IntType, curr_lowest + 1),
                             Space::Cube => (acc, i + 1),
                             Space::Empty => (acc, curr_lowest),
