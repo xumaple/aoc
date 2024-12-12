@@ -199,7 +199,7 @@ impl FileSystem {
                 back_cursor -= 1;
             }
             if full_cursor >= back_cursor {
-                return self
+                return self;
             }
             cursor = full_cursor;
             let back_len = self[back_cursor].len();
@@ -241,7 +241,10 @@ mod test_a {
 
     #[test]
     fn offical() {
-        assert_eq!(run(read("src/y24/d09/input.txt").unwrap()).unwrap(), 6370402949053);
+        assert_eq!(
+            run(read("src/y24/d09/input.txt").unwrap()).unwrap(),
+            6370402949053
+        );
     }
 }
 
@@ -257,6 +260,9 @@ mod test_b {
 
     #[test]
     fn offical() {
-        assert_eq!(run(read("src/y24/d09/input.txt").unwrap()).unwrap(), 6398096697992);
+        assert_eq!(
+            run(read("src/y24/d09/input.txt").unwrap()).unwrap(),
+            6398096697992
+        );
     }
 }

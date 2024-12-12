@@ -1,5 +1,5 @@
-use std::ops::{Add, AddAssign, Sub};
 use super::{Position, PositionPtr};
+use std::ops::{Add, AddAssign, Sub};
 
 impl Sub for Position {
     type Output = Self;

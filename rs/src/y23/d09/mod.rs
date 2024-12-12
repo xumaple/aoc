@@ -54,7 +54,10 @@ mod test_a {
 
     #[test]
     fn offical() {
-        assert_eq!(run(read("src/y23/d09/input.txt").unwrap()).unwrap(), 2101499000);
+        assert_eq!(
+            run(read("src/y23/d09/input.txt").unwrap()).unwrap(),
+            2101499000
+        );
     }
 }
 

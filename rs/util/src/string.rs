@@ -69,8 +69,9 @@ where
     }
 
     fn indices<'a, P>(&'a self, pattern: P) -> impl Iterator<Item = usize>
-        where
-            P: std::str::pattern::Pattern + ToString + Clone {
+    where
+        P: std::str::pattern::Pattern + ToString + Clone,
+    {
         self.as_ref().match_indices(pattern).map(|(idx, _)| idx)
     }
 }

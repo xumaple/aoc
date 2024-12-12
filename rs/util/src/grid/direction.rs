@@ -1,6 +1,6 @@
+use crate::{UnsafeFrom, UnsafeInto};
 use num_derive::FromPrimitive;
 use num_traits::FromPrimitive;
-use crate::{UnsafeFrom, UnsafeInto};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, FromPrimitive)]
 pub enum Direction {

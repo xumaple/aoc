@@ -13,7 +13,10 @@ mod test_a {
 
     #[test]
     fn offical() {
-        assert_eq!(run(read("src/y23/d06/input.txt").unwrap()).unwrap(), 1731600);
+        assert_eq!(
+            run(read("src/y23/d06/input.txt").unwrap()).unwrap(),
+            1731600
+        );
     }
 }
 
@@ -29,6 +32,9 @@ mod test_b {
 
     #[test]
     fn offical() {
-        assert_eq!(run(read("src/y23/d06/input.txt").unwrap()).unwrap(), 40087680);
+        assert_eq!(
+            run(read("src/y23/d06/input.txt").unwrap()).unwrap(),
+            40087680
+        );
     }
 }
