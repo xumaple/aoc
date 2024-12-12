@@ -7,6 +7,7 @@ pub use position::*;
 pub mod direction;
 pub use direction::*;
 pub mod grid_math;
+pub mod grid_map;
 
 #[derive(Clone)]
 pub struct Grid<T>(Vec<Vec<T>>);
@@ -54,6 +55,21 @@ impl<T> Grid<T> {
         self.0.iter_mut().flatten()
     }
 
+    pub fn flat_enumerate(&self) -> impl Iterator<Item = (PositionPtr<T>, &T)> {
+        let width = self.width();
+        self.iter()
+            .enumerate()
+            .map(move |(i, val)| (PositionPtr::new(i / width, i % width, Some(self)), val))
+    }
+
+    pub fn flat_enumerate_mut(&mut self) -> impl Iterator<Item = (PositionPtr<T>, &mut T)> {
+        let width = self.width();
+        let ptr: Option<*const Self> = Some(self);
+        self.iter_mut()
+            .enumerate()
+            .map(move |(i, val)| (PositionPtr::new(i / width, i % width, ptr.clone()), val))
+    }
+
     pub fn enumerate(&self) -> impl Iterator<Item = impl Iterator<Item = (PositionPtr<T>, &T)>> {
         self.iter_rows().enumerate().map(move |(x, v)| {
             v.iter()
@@ -76,6 +92,10 @@ impl<T> Grid<T> {
                 .collect_vec(),
         )
     }
+
+    // pub fn pos(&self, position: Position) -> PositionPtr<T> {
+    //     PositionPtr::new(position.x, position.y, Some(self))
+    // }
 }
 
 impl<T: Clone + Default + Copy> Grid<T> {

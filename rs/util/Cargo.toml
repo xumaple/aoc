@@ -18,3 +18,4 @@ quote = "1"
 rc-cell = "0.1"
 clap = { version = "4", features = ["derive"] }
 regex = "1.11"
+multi_key_map = "0.3"

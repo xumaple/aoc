@@ -14,6 +14,7 @@ pub use std::cmp::{Eq, Ord, Ordering, PartialEq, PartialOrd};
 pub use std::collections::{
     BTreeMap, BTreeSet, BinaryHeap, HashMap, HashSet, LinkedList, VecDeque,
 };
+pub use multi_key_map::MultiKeyMap;
 pub use std::fmt::Debug;
 pub use std::hash::Hash;
 pub use std::iter::FromIterator;

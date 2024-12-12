@@ -28,10 +28,44 @@ impl Direction {
     fn shift(&self, n: u8) -> Self {
         ((*self as u8 + n) % 4).uinto()
     }
+
+    pub fn iter_counterclockwise() -> impl Iterator<Item = Self> {
+        (0..4).map(Self::ufrom)
+    }
+
+    pub fn iter_clockwise() -> impl Iterator<Item = Self> {
+        [0, 3, 2, 1].into_iter().map(Self::ufrom)
+    }
 }
 
 impl UnsafeFrom<u8> for Direction {
     fn ufrom(a: u8) -> Self {
         Self::from_u8(a).unwrap()
     }
+}
+
+pub trait Directional: Sized {
+    type Err: Default;
+    fn next(&self, dir: Direction) -> Option<Self>;
+    fn step(&mut self, dir: Direction) -> Result<&Self, Self::Err> {
+        match self.next(dir) {
+            Some(new_self) => { *self = new_self; Ok(self) },
+            None => Err(self.error(dir))
+        }
+    }
+    fn error(&self, _dir: Direction) -> Self::Err {
+        Self::Err::default()
+    }
+
+    fn check_sides<F, R>(&self, mut f: F) -> impl Iterator<Item = Option<R>>
+    where
+        F: FnMut(Self) -> R,
+    {
+        Direction::iter_clockwise().map(move |dir| self.next(dir).map(|dir| f(dir)))
+    }
+
+    // fn check_diagonals<F, R>(&self, mut f: F) -> impl Iterator<Item = Option<R>>
+    // where
+    //     F: FnMut(Self) -> R,
+    // {}
 }

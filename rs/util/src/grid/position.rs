@@ -1,4 +1,4 @@
-use super::{Direction, Grid};
+use super::{Direction, Directional, Grid, E};
 pub use std::fmt::Debug;
 
 #[derive(Copy, Clone, Default, Debug, PartialEq, Eq, Hash)]
@@ -12,6 +12,31 @@ pub type PositionT<T> = (Position, T);
 impl Position {
     pub fn new(x: usize, y: usize) -> Self {
         Self { x, y }
+    }
+}
+
+impl Directional for Position {
+    type Err = E;
+    fn next(&self, dir: Direction) -> Option<Self> {
+        if match dir {
+            Direction::U => self.x <= 0,
+            Direction::D => false,
+            Direction::L => self.y <= 0,
+            Direction::R => false,
+        } {
+            return None;
+        }
+
+        match dir {
+            Direction::U => Some(Self::new(self.x - 1, self.y)),
+            Direction::D => Some(Self::new(self.x + 1, self.y)),
+            Direction::L => Some(Self::new(self.x, self.y - 1)),
+            Direction::R => Some(Self::new(self.x, self.y + 1)),
+        }
+    }
+
+    fn error(&self, dir: Direction) -> Self::Err {
+        E::OutOfBoundsMove(*self, dir)
     }
 }
 
@@ -128,6 +153,15 @@ impl<'a, T> Clone for PositionPtr<T> {
             x: self.x,
             y: self.y,
             grid: self.grid,
+        }
+    }
+}
+
+impl<T> From<PositionPtr<T>> for Position {
+    fn from(value: PositionPtr<T>) -> Self {
+        Self {
+            x: value.x,
+            y: value.y,
         }
     }
 }
