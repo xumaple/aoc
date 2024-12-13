@@ -61,7 +61,7 @@ impl Beam {
     }
 
     pub fn is_energized(&self) -> bool {
-        self.energized[0] & self.energized[1] & self.energized[2] & self.energized[3]
+        self.energized[0] | self.energized[1] | self.energized[2] | self.energized[3]
     }
 }
 
