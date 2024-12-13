@@ -1,11 +1,12 @@
 use std::slice::SliceIndex;
 
+use crate::traits::{GridTrait, Pointer, PointerMut};
 use crate::*;
 
 #[derive(Clone)]
-pub struct GridVec<T>(Vec<Vec<T>>);
+pub struct Grid<T>(Vec<Vec<T>>);
 
-impl<T> FromStr for GridVec<T>
+impl<T> FromStr for Grid<T>
 where
     T: UnsafeFrom<char> + Clone,
 {
@@ -19,7 +20,7 @@ where
     }
 }
 
-impl<T: Debug> Debug for GridVec<T> {
+impl<T: Debug> Debug for Grid<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
@@ -29,75 +30,60 @@ impl<T: Debug> Debug for GridVec<T> {
     }
 }
 
-impl<T, I: SliceIndex<[Vec<T>]>> Index<I> for GridVec<T> {
+impl<T, I: SliceIndex<[Vec<T>]>> Index<I> for Grid<T> {
     type Output = I::Output;
     fn index(&self, index: I) -> &Self::Output {
         Index::index(&self.0, index)
     }
 }
 
-impl<T, I: SliceIndex<[Vec<T>]>> IndexMut<I> for GridVec<T> {
+impl<T, I: SliceIndex<[Vec<T>]>> IndexMut<I> for Grid<T> {
     fn index_mut(&mut self, index: I) -> &mut Self::Output {
         IndexMut::index_mut(&mut self.0, index)
     }
 }
 
-impl<'a, T> Index<Position> for GridVec<T> {
+impl<'a, T> Index<Position> for Grid<T> {
     type Output = T;
     fn index(&self, index: Position) -> &Self::Output {
         &self[index.x][index.y]
     }
 }
 
-impl<'a, T> IndexMut<Position> for GridVec<T> {
+impl<'a, T> IndexMut<Position> for Grid<T> {
     fn index_mut(&mut self, index: Position) -> &mut Self::Output {
         &mut self[index.x][index.y]
     }
 }
 
-impl<T> GridVec<T> {
+impl<T> Grid<T> {
     pub fn new(v: Vec<Vec<T>>) -> Self {
         Self(v)
     }
+}
 
-    pub fn len(&self) -> usize {
+impl<T> GridTrait<T> for Grid<T> {
+    type Cursor = Cursor<T>;
+    type CursorMut = CursorMut<T>;
+    fn len(&self) -> usize {
         self.0.len()
     }
 
-    pub fn width(&self) -> usize {
+    fn width(&self) -> usize {
         self.0[0].len()
     }
 
-    pub fn cursor(&self, index: Position) -> Cursor<T> {
+    fn cursor(&self, index: Position) -> Self::Cursor {
         Cursor::new(index, self)
     }
 
-    pub fn cursor_mut(&mut self, index: Position) -> CursorMut<T> {
+    fn cursor_mut(&mut self, index: Position) -> Self::CursorMut {
         CursorMut::new(index, self)
     }
 
-    /// DEPRECATED. Use `iter_flat`
-    pub fn iter(&self) -> impl DoubleEndedIterator<Item = Cursor<T>> + use<'_, T> {
-        self.iter_rows().flatten()
-    }
-
-    /// DEPRECATED. Use `iter_flat_mut`
-    pub fn iter_mut(&mut self) -> impl DoubleEndedIterator<Item = CursorMut<T>> + use<'_, T> {
-        self.iter_rows_mut().flatten()
-    }
-
-    pub fn iter_flat(&self) -> impl DoubleEndedIterator<Item = Cursor<T>> + use<'_, T> {
-        self.iter_rows().flatten()
-    }
-
-    pub fn iter_flat_mut(&mut self) -> impl DoubleEndedIterator<Item = CursorMut<T>> + use<'_, T> {
-        self.iter_rows_mut().flatten()
-    }
-
-    pub fn iter_rows(
+    fn iter_rows(
         &self,
-    ) -> impl DoubleEndedIterator<Item = impl DoubleEndedIterator<Item = Cursor<T>> + use<'_, T>>
-    {
+    ) -> impl DoubleEndedIterator<Item = impl DoubleEndedIterator<Item = Self::Cursor>> {
         (0..self.len()).into_iter().map(move |x| {
             (0..self.width())
                 .into_iter()
@@ -105,11 +91,10 @@ impl<T> GridVec<T> {
         })
     }
 
-    pub fn iter_rows_mut(
+    fn iter_rows_mut(
         &mut self,
-    ) -> impl DoubleEndedIterator<Item = impl DoubleEndedIterator<Item = CursorMut<T>> + use<'_, T>>
-    {
-        let ptr: *mut GridVec<T> = self;
+    ) -> impl DoubleEndedIterator<Item = impl DoubleEndedIterator<Item = Self::CursorMut>> {
+        let ptr: *mut Grid<T> = self;
         (0..self.len()).into_iter().map(move |x| {
             (0..self.width())
                 .into_iter()
@@ -117,10 +102,9 @@ impl<T> GridVec<T> {
         })
     }
 
-    pub fn iter_cols(
+    fn iter_cols(
         &self,
-    ) -> impl DoubleEndedIterator<Item = impl DoubleEndedIterator<Item = Cursor<T>> + use<'_, T>>
-    {
+    ) -> impl DoubleEndedIterator<Item = impl DoubleEndedIterator<Item = Self::Cursor>> {
         (0..self.width()).into_iter().map(move |y| {
             (0..self.len())
                 .into_iter()
@@ -128,11 +112,10 @@ impl<T> GridVec<T> {
         })
     }
 
-    pub fn iter_cols_mut(
+    fn iter_cols_mut(
         &mut self,
-    ) -> impl DoubleEndedIterator<Item = impl DoubleEndedIterator<Item = CursorMut<T>> + use<'_, T>>
-    {
-        let ptr: *mut GridVec<T> = self;
+    ) -> impl DoubleEndedIterator<Item = impl DoubleEndedIterator<Item = Self::CursorMut>> {
+        let ptr: *mut Grid<T> = self;
         (0..self.width()).into_iter().map(move |y| {
             (0..self.len())
                 .into_iter()
@@ -140,10 +123,9 @@ impl<T> GridVec<T> {
         })
     }
 
-    pub fn iter_snake(
+    fn iter_snake(
         &self,
-    ) -> impl DoubleEndedIterator<Item = impl DoubleEndedIterator<Item = Cursor<T>> + use<'_, T>>
-    {
+    ) -> impl DoubleEndedIterator<Item = impl DoubleEndedIterator<Item = Self::Cursor>> {
         let max_y = self.width() - 1;
         (0..self.len()).into_iter().map(move |x| {
             (0..self.width()).into_iter().map(move |y| {
@@ -155,11 +137,10 @@ impl<T> GridVec<T> {
         })
     }
 
-    pub fn iter_snake_mut(
+    fn iter_snake_mut(
         &mut self,
-    ) -> impl DoubleEndedIterator<Item = impl DoubleEndedIterator<Item = CursorMut<T>> + use<'_, T>>
-    {
-        let ptr: *mut GridVec<T> = self;
+    ) -> impl DoubleEndedIterator<Item = impl DoubleEndedIterator<Item = Self::CursorMut>> {
+        let ptr: *mut Grid<T> = self;
         let max_y = self.width() - 1;
         (0..self.len()).into_iter().map(move |x| {
             (0..self.width()).into_iter().map(move |y| {
@@ -170,17 +151,20 @@ impl<T> GridVec<T> {
             })
         })
     }
-}
 
-impl<T: Clone + Default + Copy> GridVec<T> {
-    pub fn rotate_90(self) -> Self {
+    fn rotate_90(self) -> Self
+    where
+        T: Clone + Default + Copy,
+    {
         Self(
             self.iter_cols()
                 .map(|col| col.rev().map(|item| item.val().clone()).collect_vec())
                 .collect_vec(),
         )
     }
+}
 
+impl<T: Clone + Default + Copy> Grid<T> {
     /// iter diagonally, positive slope:
     /// [ 0, 1, 2,
     ///   3, 4, 5,
@@ -202,7 +186,7 @@ impl<T: Clone + Default + Copy> GridVec<T> {
     }
 }
 
-impl<T: Default + Clone> GridVec<T> {
+impl<T: Default + Clone> Grid<T> {
     pub fn new_with_dimensions(x: usize, y: usize) -> Self {
         Self(vec![vec![T::default(); y]; x])
     }
@@ -210,13 +194,13 @@ impl<T: Default + Clone> GridVec<T> {
 
 #[cfg(test)]
 mod grid_tests {
-    use super::GridVec;
+    use super::Grid;
     use itertools::Itertools;
     use std::str::FromStr;
 
     #[test]
     fn iter_diags_positive() {
-        let g = GridVec::<u32>::from_str("012\n345\n678").unwrap();
+        let g = Grid::<u32>::from_str("012\n345\n678").unwrap();
         let s = g
             .iter_diags_positive()
             .map(|v| {
@@ -230,12 +214,12 @@ mod grid_tests {
 }
 
 pub struct Cursor<T> {
-    grid: *const GridVec<T>,
+    grid: *const Grid<T>,
     pub index: Position,
 }
 
 pub struct CursorMut<T> {
-    grid: *mut GridVec<T>,
+    grid: *mut Grid<T>,
     pub index: Position,
 }
 
@@ -253,48 +237,64 @@ impl<T> Clone for CursorMut<T> {
 }
 
 impl<T> Cursor<T> {
-    fn new(index: Position, grid: *const GridVec<T>) -> Self {
+    fn new(index: Position, grid: *const Grid<T>) -> Self {
         Self { grid, index }
     }
+}
 
-    pub fn reset(&mut self) -> &Self {
+impl<T> Pointer<T> for Cursor<T> {
+    fn index(&self) -> Position {
+        self.index
+    }
+
+    fn reset(&mut self) -> &Self {
         self.index = Position::new(0, 0);
         self
     }
 
-    pub fn val(&self) -> &T {
+    fn val(&self) -> &T {
         unsafe { &(*self.grid)[self.index] }
     }
-}
 
-impl<T: Clone> Cursor<T> {
-    pub fn to_enumerated_tuple(&self) -> (Position, T) {
+    fn to_enumerated_tuple(&self) -> (Position, T)
+    where
+        T: Clone,
+    {
         (self.index, self.val().clone())
     }
 }
 
 impl<T> CursorMut<T> {
-    fn new(index: Position, grid: *mut GridVec<T>) -> Self {
+    fn new(index: Position, grid: *mut Grid<T>) -> Self {
         Self { grid, index }
     }
+}
 
-    pub fn reset(&mut self) -> &Self {
+impl<T> Pointer<T> for CursorMut<T> {
+    fn index(&self) -> Position {
+        self.index
+    }
+
+    fn reset(&mut self) -> &Self {
         self.index = Position::new(0, 0);
         self
     }
 
-    pub fn val(&self) -> &T {
+    fn val(&self) -> &T {
         unsafe { &(*self.grid)[self.index] }
     }
 
-    pub fn val_mut(&mut self) -> &mut T {
-        unsafe { &mut (*self.grid)[self.index] }
+    fn to_enumerated_tuple(&self) -> (Position, T)
+    where
+        T: Clone,
+    {
+        (self.index, self.val().clone())
     }
 }
 
-impl<T: Clone> CursorMut<T> {
-    pub fn to_enumerated_tuple(&self) -> (Position, T) {
-        (self.index, self.val().clone())
+impl<T> PointerMut<T> for CursorMut<T> {
+    fn val_mut(&mut self) -> &mut T {
+        unsafe { &mut (*self.grid)[self.index] }
     }
 }
 

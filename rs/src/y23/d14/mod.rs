@@ -1,4 +1,4 @@
-use grid_vec::GridVec;
+use grid_vec::Grid;
 use util::*;
 
 pub mod a;
@@ -39,12 +39,12 @@ impl UnsafeFrom<char> for Space {
     }
 }
 
-pub struct Rocks(GridVec<Space>);
+pub struct Rocks(Grid<Space>);
 
 impl FromStr for Rocks {
     type Err = E;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Ok(Self(GridVec::from_str(s)?))
+        Ok(Self(Grid::from_str(s)?))
     }
 }
 
@@ -101,7 +101,7 @@ impl Rocks {
                 let _ = next_curr_lowest.step(Direction::R);
                 col.enumerate().fold(0, |acc, (x, mut cs)| match *cs.val() {
                     Space::Round => {
-                        if curr_lowest.index != cs.index {
+                        if curr_lowest.index() != cs.index() {
                             std::mem::swap(curr_lowest.val_mut(), cs.val_mut());
                         }
                         let _ = curr_lowest.step(Direction::D);

@@ -1,4 +1,4 @@
-use grid_map::{CursorMut, GridMap};
+use grid_map::{CursorMut, Grid};
 use util::*;
 
 pub mod a;
@@ -104,12 +104,12 @@ impl CheckSidesCalculation for Sides {
 }
 
 #[derive(Debug)]
-struct Garden(GridMap<Plot>);
+struct Garden(Grid<Plot>);
 
 impl FromStr for Garden {
     type Err = E;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Ok(Self(GridMap::from_str(s)?))
+        Ok(Self(Grid::from_str(s)?))
     }
 }
 

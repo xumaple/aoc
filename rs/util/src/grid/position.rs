@@ -1,5 +1,6 @@
-use super::{Direction, Directional, Grid, E};
-pub use std::fmt::Debug;
+use super::{deprecated::Grid, Direction, Directional};
+use crate::E;
+use std::fmt::Debug;
 
 #[derive(Copy, Clone, Default, PartialEq, Eq, Hash)]
 pub struct Position {

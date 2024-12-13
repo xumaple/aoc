@@ -1,3 +1,4 @@
+use grid::deprecated::Grid;
 use util::*;
 
 pub mod a;
