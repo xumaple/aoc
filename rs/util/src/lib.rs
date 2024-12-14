@@ -18,7 +18,10 @@ pub use std::collections::{
 pub use std::fmt::Debug;
 pub use std::hash::Hash;
 pub use std::iter::FromIterator;
-pub use std::ops::{Add, Deref, DerefMut, Index, IndexMut, Range, Sub};
+pub use std::ops::{
+    Add, AddAssign, Deref, DerefMut, Div, DivAssign, Index, IndexMut, Mul, MulAssign, Range, Sub,
+    SubAssign,
+};
 pub use std::path::Path;
 pub use std::str::pattern::Pattern;
 pub use std::sync::Arc;
