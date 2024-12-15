@@ -1,5 +1,5 @@
-use super::{Position, PositionPtr};
-use std::ops::{Add, AddAssign, Sub};
+use super::{Position, PositionPtr, SignedPosition};
+use std::ops::{Add, AddAssign, Mul, Sub};
 
 impl Sub for Position {
     type Output = Self;
@@ -121,5 +121,52 @@ impl<T> AddAssign<Position> for PositionPtr<T> {
     fn add_assign(&mut self, rhs: Position) {
         self.x = self.x.wrapping_add(rhs.x);
         self.y = self.y.wrapping_add(rhs.y);
+    }
+}
+
+impl Add for SignedPosition {
+    type Output = Self;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        Self {
+            x: self.x.wrapping_add(rhs.x),
+            y: self.y.wrapping_add(rhs.y),
+        }
+    }
+}
+
+impl AddAssign for SignedPosition {
+    fn add_assign(&mut self, rhs: Self) {
+        self.x = self.x.wrapping_add(rhs.x);
+        self.y = self.y.wrapping_add(rhs.y);
+    }
+}
+
+impl Add<Position> for SignedPosition {
+    type Output = Self;
+    fn add(mut self, rhs: Position) -> Self::Output {
+        self.x += rhs.x as isize;
+        self.y += rhs.y as isize;
+        self
+    }
+}
+
+impl Sub for SignedPosition {
+    type Output = Self;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        Self {
+            x: self.x.wrapping_sub(rhs.x),
+            y: self.y.wrapping_sub(rhs.y),
+        }
+    }
+}
+
+impl Mul<isize> for SignedPosition {
+    type Output = Self;
+    fn mul(mut self, rhs: isize) -> Self::Output {
+        self.x *= rhs;
+        self.y *= rhs;
+        self
     }
 }

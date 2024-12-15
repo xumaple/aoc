@@ -118,3 +118,11 @@ where
         S::ufrom(self)
     }
 }
+
+pub trait IteratorExt: Iterator {
+    fn unext(&mut self) -> Self::Item {
+        self.next().unwrap()
+    }
+}
+
+impl<I, It: Iterator<Item = I>> IteratorExt for It {}

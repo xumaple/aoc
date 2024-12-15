@@ -7,4 +7,5 @@ pub mod grid_math;
 pub mod grid_vec;
 pub mod traits;
 pub use traits::*;
+pub mod abstract_grid;
 pub mod deprecated;

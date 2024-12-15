@@ -1,5 +1,5 @@
 use super::{deprecated::Grid, Direction, Directional};
-use crate::E;
+use crate::{UnsafeIntoNum, E};
 use std::fmt::Debug;
 
 #[derive(Copy, Clone, Default, PartialEq, Eq, Hash)]
@@ -169,6 +169,67 @@ impl<T> From<PositionPtr<T>> for Position {
         Self {
             x: value.x,
             y: value.y,
+        }
+    }
+}
+
+impl From<(usize, usize)> for Position {
+    fn from(value: (usize, usize)) -> Self {
+        Self {
+            x: value.0,
+            y: value.1,
+        }
+    }
+}
+
+#[derive(Copy, Clone, Default, PartialEq, Eq, Hash)]
+pub struct SignedPosition {
+    pub x: isize,
+    pub y: isize,
+}
+
+impl SignedPosition {
+    pub fn new(x: isize, y: isize) -> Self {
+        Self { x, y }
+    }
+}
+
+impl Debug for SignedPosition {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "({}, {})", self.x, self.y)
+    }
+}
+
+impl Directional for SignedPosition {
+    type Err = E;
+    fn next(&self, dir: Direction) -> Option<Self> {
+        match dir {
+            Direction::U => Some(Self::new(self.x - 1, self.y)),
+            Direction::D => Some(Self::new(self.x + 1, self.y)),
+            Direction::L => Some(Self::new(self.x, self.y - 1)),
+            Direction::R => Some(Self::new(self.x, self.y + 1)),
+        }
+    }
+
+    fn error(&self, dir: Direction) -> Self::Err {
+        unimplemented!()
+    }
+}
+
+impl From<(isize, isize)> for SignedPosition {
+    fn from(value: (isize, isize)) -> Self {
+        Self {
+            x: value.0,
+            y: value.1,
+        }
+    }
+}
+
+impl From<Position> for SignedPosition {
+    fn from(value: Position) -> Self {
+        Self {
+            x: value.x.uinton(),
+            y: value.y.uinton(),
         }
     }
 }
