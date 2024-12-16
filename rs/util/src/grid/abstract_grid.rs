@@ -1,4 +1,4 @@
-use crate::traits::{GridTrait, Pointer, PointerMut};
+use crate::traits::{Pointer, PointerMut};
 use crate::*;
 
 pub enum GridBoundary {

@@ -211,7 +211,7 @@ impl Directional for SignedPosition {
         }
     }
 
-    fn error(&self, dir: Direction) -> Self::Err {
+    fn error(&self, _: Direction) -> Self::Err {
         unimplemented!()
     }
 }
