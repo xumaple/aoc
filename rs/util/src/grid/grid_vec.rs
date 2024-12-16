@@ -25,7 +25,10 @@ impl<T: Debug> Debug for Grid<T> {
         write!(
             f,
             "{}",
-            self.0.iter().map(|line| format!("{:?}", line)).join("\n")
+            self.0
+                .iter()
+                .map(|line| line.iter().map(|t| format!("{t:?}")).join(""))
+                .join("\n")
         )
     }
 }
@@ -301,6 +304,7 @@ impl<T> PointerMut<T> for CursorMut<T> {
 impl<T> Directional for Cursor<T> {
     type Err = E;
     fn next(&self, dir: Direction) -> Option<Self> {
+        println!("next");
         self.index
             .next(dir)
             .take_if(|next| unsafe { next.x < (*self.grid).len() && next.y < (*self.grid).width() })

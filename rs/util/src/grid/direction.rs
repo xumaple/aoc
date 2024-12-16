@@ -47,7 +47,7 @@ impl UnsafeFrom<u8> for Direction {
 pub trait Directional: Sized {
     type Err: Default;
     fn next(&self, dir: Direction) -> Option<Self>;
-    fn step(&mut self, dir: Direction) -> Result<&Self, Self::Err> {
+    fn step(&mut self, dir: Direction) -> Result<&mut Self, Self::Err> {
         match self.next(dir) {
             Some(new_self) => {
                 *self = new_self;
