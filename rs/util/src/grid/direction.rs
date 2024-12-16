@@ -36,6 +36,10 @@ impl Direction {
     pub fn iter_clockwise() -> impl Iterator<Item = Self> {
         [0, 3, 2, 1].into_iter().map(Self::ufrom)
     }
+
+    pub fn is_horizontal(&self) -> bool {
+        *self == Self::L || *self == Self::R
+    }
 }
 
 impl UnsafeFrom<u8> for Direction {

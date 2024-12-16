@@ -63,6 +63,10 @@ impl<T> Grid<T> {
     pub fn new(v: Vec<Vec<T>>) -> Self {
         Self(v)
     }
+
+    pub fn into_iter_raw(self) -> impl Iterator<Item = impl Iterator<Item = T>> {
+        self.0.into_iter().map(|v| v.into_iter())
+    }
 }
 
 impl<T> GridTrait<T> for Grid<T> {
