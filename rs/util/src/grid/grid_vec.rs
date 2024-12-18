@@ -220,11 +220,13 @@ mod grid_tests {
     }
 }
 
+#[derive(PartialEq, Eq)]
 pub struct Cursor<T> {
     grid: *const Grid<T>,
     pub index: Position,
 }
 
+#[derive(PartialEq, Eq)]
 pub struct CursorMut<T> {
     grid: *mut Grid<T>,
     pub index: Position,
@@ -308,7 +310,6 @@ impl<T> PointerMut<T> for CursorMut<T> {
 impl<T> Directional for Cursor<T> {
     type Err = E;
     fn next(&self, dir: Direction) -> Option<Self> {
-        println!("next");
         self.index
             .next(dir)
             .take_if(|next| unsafe { next.x < (*self.grid).len() && next.y < (*self.grid).width() })
