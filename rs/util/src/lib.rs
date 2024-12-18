@@ -8,7 +8,6 @@ pub use core::str::FromStr;
 pub use itertools::Itertools;
 pub use multi_key_map::MultiKeyMap;
 pub use num::integer::lcm;
-pub use pathfinding;
 pub use rc_cell::*;
 pub use regex::Regex;
 pub use std::cell::{Ref, RefMut};

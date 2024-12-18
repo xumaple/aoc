@@ -35,9 +35,6 @@ macro_rules! impl_number {
             fn inf() -> Self {
                 <$t>::MAX
             }
-            fn zero() -> Self {
-                0
-            }
         }
     };
 }

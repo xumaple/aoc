@@ -1,5 +1,5 @@
 use super::{deprecated::Grid, Direction, Directional};
-use crate::{UnsafeIntoNum, E};
+use crate::{abs_diff, UnsafeIntoNum, E};
 use std::fmt::Debug;
 
 #[derive(Copy, Clone, Default, PartialEq, Eq, Hash)]
@@ -13,6 +13,10 @@ pub type PositionT<T> = (Position, T);
 impl Position {
     pub fn new(x: usize, y: usize) -> Self {
         Self { x, y }
+    }
+
+    pub fn cardinal_distance(&self, other: &Self) -> usize {
+        abs_diff(self.x, other.x) + abs_diff(self.y, other.y)
     }
 }
 

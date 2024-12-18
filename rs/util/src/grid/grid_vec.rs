@@ -249,6 +249,14 @@ impl<T> Cursor<T> {
     fn new(index: Position, grid: *const Grid<T>) -> Self {
         Self { grid, index }
     }
+
+    pub fn len(&self) -> usize {
+        unsafe { (*self.grid).len() }
+    }
+
+    pub fn width(&self) -> usize {
+        unsafe { (*self.grid).width() }
+    }
 }
 
 impl<T> Pointer<T> for Cursor<T> {
@@ -276,6 +284,14 @@ impl<T> Pointer<T> for Cursor<T> {
 impl<T> CursorMut<T> {
     fn new(index: Position, grid: *mut Grid<T>) -> Self {
         Self { grid, index }
+    }
+
+    pub fn len(&self) -> usize {
+        unsafe { (*self.grid).len() }
+    }
+
+    pub fn width(&self) -> usize {
+        unsafe { (*self.grid).width() }
     }
 }
 
@@ -344,6 +360,18 @@ impl<T> Debug for Cursor<T> {
 impl<T> Debug for CursorMut<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         self.index.fmt(f)
+    }
+}
+
+impl<T> Hash for Cursor<T> {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.index.hash(state)
+    }
+}
+
+impl<T> Hash for CursorMut<T> {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.index.hash(state)
     }
 }
 
