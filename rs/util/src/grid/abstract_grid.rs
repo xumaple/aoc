@@ -160,11 +160,13 @@ impl<T: Default> Grid<T> {
     }
 }
 
+#[derive(PartialEq, Eq)]
 pub struct Cursor<T: Default> {
     grid: *const Grid<T>,
     pub index: Position,
 }
 
+#[derive(PartialEq, Eq)]
 pub struct CursorMut<T: Default> {
     grid: *mut Grid<T>,
     pub index: Position,
@@ -186,6 +188,14 @@ impl<T: Default> Clone for CursorMut<T> {
 impl<T: Default> Cursor<T> {
     fn new(index: Position, grid: *const Grid<T>) -> Self {
         Self { grid, index }
+    }
+
+    pub fn len(&self) -> usize {
+        unsafe { (*self.grid).len() }
+    }
+
+    pub fn width(&self) -> usize {
+        unsafe { (*self.grid).width() }
     }
 }
 
@@ -216,11 +226,11 @@ impl<T: Default> CursorMut<T> {
         Self { grid, index }
     }
 
-    fn len(&self) -> usize {
+    pub fn len(&self) -> usize {
         unsafe { (*self.grid).len() }
     }
 
-    fn width(&self) -> usize {
+    pub fn width(&self) -> usize {
         unsafe { (*self.grid).width() }
     }
 }
@@ -290,6 +300,18 @@ impl<T: Default> Debug for Cursor<T> {
 impl<T: Default> Debug for CursorMut<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         self.index.fmt(f)
+    }
+}
+
+impl<T: Default> Hash for Cursor<T> {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.index.hash(state)
+    }
+}
+
+impl<T: Default> Hash for CursorMut<T> {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.index.hash(state)
     }
 }
 

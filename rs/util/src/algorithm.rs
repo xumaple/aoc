@@ -43,6 +43,19 @@ where
     (items.into_iter(), cost)
 }
 
+pub fn astar_safe<N>(start: N) -> Option<(impl Iterator<Item = N>, N::Cost)>
+where
+    N: AStarNode + Eq + Hash + Clone,
+{
+    pathfinding::directed::astar::astar(
+        &start,
+        |node| node.next().collect_vec(),
+        <N as AStarNode>::heuristic,
+        <N as PathfindingNode>::is_goal,
+    )
+    .map(|(items, cost)| (items.into_iter(), cost))
+}
+
 pub fn astar_bag<N>(start: N) -> (impl Iterator<Item = impl Iterator<Item = N>>, N::Cost)
 where
     N: AStarNode + Eq + Hash + Clone,
