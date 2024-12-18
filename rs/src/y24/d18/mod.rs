@@ -75,11 +75,22 @@ impl Memory {
     }
 
     pub fn shortest_path(&mut self) -> IntType {
-        astar(Point(self.grid.cursor_mut(Position::new(0, 0)))).1
+        astar(self.starting_point()).1
     }
 
-    pub fn path_exists(&mut self) -> bool {
+    fn starting_point(&mut self) -> Point {
+        Point(self.grid.cursor_mut(Position::new(0, 0)))
+    }
+
+    fn path_exists(&mut self) -> bool {
         astar_safe(Point(self.grid.cursor_mut(Position::new(0, 0)))).is_some()
+    }
+
+    pub fn simulate_until_blocked(mut self) -> Position {
+        while self.path_exists() {
+            self = self.simulate(1);
+        }
+        self.last_simulated.unwrap()
     }
 }
 
@@ -133,13 +144,16 @@ mod test_b {
     use super::b::run;
     use util::read;
 
-    #[test]
-    fn sample() {
-        assert_eq!(run(read("src/y24/d18/sample.txt").unwrap()).unwrap(), "6,1");
-    }
-
     // #[test]
-    // fn offical() {
-    //     assert_eq!(run(read("src/y24/d18/input.txt").unwrap()).unwrap(), 0);
+    // fn sample() {
+    //     assert_eq!(run(read("src/y24/d18/sample.txt").unwrap()).unwrap(), "6,1");
     // }
+
+    #[test]
+    fn offical() {
+        assert_eq!(
+            run(read("src/y24/d18/input.txt").unwrap()).unwrap(),
+            "58,44"
+        );
+    }
 }
