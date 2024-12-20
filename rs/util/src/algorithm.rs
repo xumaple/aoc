@@ -56,16 +56,29 @@ where
     .map(|(items, cost)| (items.into_iter(), cost))
 }
 
-pub fn astar_bag<N>(start: N) -> (impl Iterator<Item = impl Iterator<Item = N>>, N::Cost)
+pub fn astar_bag<N>(start: N) -> Option<(impl Iterator<Item = impl Iterator<Item = N>>, N::Cost)>
 where
     N: AStarNode + Eq + Hash + Clone,
 {
-    let (solutions, cost) = pathfinding::directed::astar::astar_bag(
+    pathfinding::directed::astar::astar_bag(
         &start,
         |node| node.next().collect_vec(),
         <N as AStarNode>::heuristic,
         <N as PathfindingNode>::is_goal,
     )
-    .unwrap();
-    (solutions.map(|v| v.into_iter()), cost)
+    .map(|(solutions, cost)| (solutions.map(|v| v.into_iter()), cost))
+}
+
+/// Searches through node list to find all starting nodes, then runs `astar_bag` on each
+pub fn astar_bag_all_starts<N>(
+    nodes: impl Iterator<Item = N>,
+) -> impl Iterator<Item = (N, impl Iterator<Item = impl Iterator<Item = N>>, N::Cost)>
+where
+    N: AStarNode + Eq + Hash + Clone,
+{
+    nodes.filter_map(|n| {
+        n.is_start()
+            .then(|| astar_bag(n.clone()).map(|(solutions, cost)| (n, solutions, cost)))
+            .flatten()
+    })
 }

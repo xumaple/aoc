@@ -110,6 +110,7 @@ impl Maze {
 
     pub fn best_tiles(&self) -> IntType {
         astar_bag(self.starting_point())
+            .unwrap()
             .0
             .flatten()
             .map(|point| point.cs.index)
