@@ -2,7 +2,7 @@ use super::{deprecated::Grid, Direction, Directional};
 use crate::{abs_diff, UnsafeIntoNum, E};
 use std::fmt::Debug;
 
-#[derive(Copy, Clone, Default, PartialEq, Eq, Hash)]
+#[derive(Copy, Clone, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Position {
     pub x: usize,
     pub y: usize,
