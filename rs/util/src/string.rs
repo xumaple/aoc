@@ -76,6 +76,16 @@ where
     }
 }
 
+pub trait IntoString {
+    fn into_string(&self) -> String;
+}
+
+impl IntoString for [u8] {
+    fn into_string(&self) -> String {
+        String::from_utf8_lossy(self).into_owned()
+    }
+}
+
 #[cfg(test)]
 mod smart_string_tests {
     use super::*;

@@ -8,8 +8,9 @@ pub use core::str::FromStr;
 pub use itertools::Itertools;
 pub use multi_key_map::MultiKeyMap;
 pub use num::integer::lcm;
-pub use rc_cell::*;
 pub use regex::Regex;
+pub use std::borrow::{Borrow, BorrowMut};
+pub use std::cell::RefCell;
 pub use std::cell::{Ref, RefMut};
 pub use std::cmp::{Eq, Ord, Ordering, PartialEq, PartialOrd};
 pub use std::collections::{
@@ -23,6 +24,7 @@ pub use std::ops::{
     SubAssign,
 };
 pub use std::path::Path;
+pub use std::rc::Rc;
 pub use std::str::pattern::Pattern;
 pub use std::sync::Arc;
 
@@ -39,6 +41,8 @@ pub mod math;
 pub use math::*;
 pub mod multimap;
 pub use multimap::*;
+pub mod trie;
+pub use trie::*;
 
 pub fn read<P: AsRef<Path>>(path: P) -> io::Result<String> {
     let path = path.as_ref();
@@ -126,3 +130,5 @@ pub trait IteratorExt: Iterator {
 }
 
 impl<I, It: Iterator<Item = I>> IteratorExt for It {}
+
+pub type RcCell<T> = Rc<RefCell<T>>;

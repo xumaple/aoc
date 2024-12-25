@@ -46,7 +46,12 @@ impl<K, V> MultiMap<K, V> {
             inner: HashMap::new(),
         }
     }
+
+    pub fn iter(&self) -> impl Iterator<Item = (&K, &Vec<V>)> {
+        self.inner.iter()
+    }
 }
+
 impl<K, V> MultiMap<K, V>
 where
     K: Eq + Hash,
@@ -58,6 +63,20 @@ where
 
     pub fn get_vals(&mut self, k: K) -> impl Iterator<Item = &V> {
         self.inner.entry(k).or_default().iter()
+    }
+}
+
+impl<K, V> FromIterator<(K, V)> for MultiMap<K, V>
+where
+    K: Eq + Hash,
+{
+    fn from_iter<T: IntoIterator<Item = (K, V)>>(iter: T) -> Self {
+        let mut map = Self::new();
+        let mut iter = iter.into_iter();
+        while let Some((k, v)) = iter.next() {
+            map.insert(k, v);
+        }
+        map
     }
 }
 
