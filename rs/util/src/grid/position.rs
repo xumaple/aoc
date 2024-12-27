@@ -46,6 +46,10 @@ impl Directional for Position {
         }
     }
 
+    fn move_pos(&self, dist: SignedPosition) -> Option<Self> {
+        Some(*self + dist)
+    }
+
     fn error(&self, dir: Direction) -> Self::Err {
         E::OutOfBoundsMove(*self, dir)
     }
@@ -213,6 +217,10 @@ impl Directional for SignedPosition {
             Direction::L => Some(Self::new(self.x, self.y - 1)),
             Direction::R => Some(Self::new(self.x, self.y + 1)),
         }
+    }
+
+    fn move_pos(&self, dist: SignedPosition) -> Option<Self> {
+        Some(*self + dist)
     }
 
     fn error(&self, _: Direction) -> Self::Err {

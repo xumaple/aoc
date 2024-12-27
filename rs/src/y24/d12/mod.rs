@@ -57,7 +57,7 @@ trait CheckSidesCalculation {
 struct Perimeter;
 impl CheckSidesCalculation for Perimeter {
     fn check_sides_calculation(cs: CursorMut<Plot>) -> IntType {
-        cs.check_sides(|plot| match plot {
+        cs.map_sides(|plot| match plot {
             Some(plot) => {
                 if plot.val().id == cs.val().id {
                     0
@@ -120,7 +120,7 @@ impl Garden {
         let mut q = VecDeque::from([cs]);
         while let Some(cs) = q.pop_back() {
             q.extend(
-                cs.check_sides(|plot| {
+                cs.map_sides(|plot| {
                     plot.map(|mut plot| {
                         if !plot.val().accounted && C::matches(plot.clone(), cs.clone()) {
                             plot.val_mut().accounted = true;

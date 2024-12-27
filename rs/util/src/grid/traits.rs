@@ -6,6 +6,9 @@ pub trait GridTrait<T>: Index<Position> {
 
     fn len(&self) -> usize;
     fn width(&self) -> usize;
+    fn in_bounds(&self, pos: Position) -> bool {
+        pos.x < self.len() && pos.y < self.width()
+    }
 
     fn cursor(&self, index: Position) -> Self::Cursor;
     fn cursor_mut(&mut self, index: Position) -> Self::CursorMut;

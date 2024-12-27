@@ -34,7 +34,6 @@ struct Computer {
     b: usize,
     c: usize,
     instructions: Vec<u8>,
-    program: String,
 }
 
 fn get_register(s: &str) -> usize {
@@ -53,19 +52,11 @@ impl FromStr for Computer {
             b: get_register(lines.unext()),
             c: get_register(lines.unext()),
             instructions: program.split(',').map(u8::ufrom).collect_vec(),
-            program: program.to_owned(),
         })
     }
 }
 
 impl Computer {
-    pub fn init(&mut self, a: usize, b: usize, c: usize) -> &mut Self {
-        self.a = a;
-        self.b = b;
-        self.c = c;
-        self
-    }
-
     fn operand_val(&self, operand: Operand) -> usize {
         match operand {
             Operand::Literal(v) => v.into(),

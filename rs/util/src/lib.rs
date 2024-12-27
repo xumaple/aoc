@@ -16,6 +16,7 @@ pub use std::cmp::{Eq, Ord, Ordering, PartialEq, PartialOrd};
 pub use std::collections::{
     BTreeMap, BTreeSet, BinaryHeap, HashMap, HashSet, LinkedList, VecDeque,
 };
+pub use std::convert::identity;
 pub use std::fmt::Debug;
 pub use std::hash::Hash;
 pub use std::iter::FromIterator;
@@ -126,6 +127,13 @@ where
 pub trait IteratorExt: Iterator {
     fn unext(&mut self) -> Self::Item {
         self.next().unwrap()
+    }
+
+    fn filter_some<T>(self) -> impl Iterator<Item = T>
+    where
+        Self: Iterator<Item = Option<T>> + Sized,
+    {
+        self.filter_map(identity)
     }
 }
 

@@ -170,3 +170,22 @@ impl Mul<isize> for SignedPosition {
         self
     }
 }
+
+fn add_i_to_usize(u: usize, mut i: isize) -> usize {
+    if i < 0 {
+        i *= -1;
+        u.wrapping_sub(i as usize)
+    } else {
+        u.wrapping_add(i as usize)
+    }
+}
+
+impl Add<SignedPosition> for Position {
+    type Output = Self;
+    fn add(self, rhs: SignedPosition) -> Self::Output {
+        Self {
+            x: add_i_to_usize(self.x, rhs.x),
+            y: add_i_to_usize(self.y, rhs.y),
+        }
+    }
+}

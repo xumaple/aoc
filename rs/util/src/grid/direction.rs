@@ -2,6 +2,8 @@ use crate::{PartialEq, UnsafeFrom, UnsafeInto};
 use num_derive::FromPrimitive;
 use num_traits::FromPrimitive;
 
+use super::SignedPosition;
+
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, FromPrimitive)]
 pub enum Direction {
     L = 0,
@@ -40,6 +42,10 @@ impl Direction {
     pub fn is_horizontal(&self) -> bool {
         *self == Self::L || *self == Self::R
     }
+
+    pub fn is_opposite(&self, other: Self) -> bool {
+        *self == other.turn_back()
+    }
 }
 
 impl UnsafeFrom<u8> for Direction {
@@ -51,6 +57,7 @@ impl UnsafeFrom<u8> for Direction {
 pub trait Directional: Sized {
     type Err: Default;
     fn next(&self, dir: Direction) -> Option<Self>;
+    fn move_pos(&self, dist: SignedPosition) -> Option<Self>;
     fn step(&mut self, dir: Direction) -> Result<&mut Self, Self::Err> {
         match self.next(dir) {
             Some(new_self) => {
@@ -64,11 +71,18 @@ pub trait Directional: Sized {
         Self::Err::default()
     }
 
-    fn check_sides<F, R>(&self, mut f: F) -> impl Iterator<Item = R>
+    fn map_sides<F, R>(&self, mut f: F) -> impl Iterator<Item = R>
     where
         F: FnMut(Option<Self>) -> R,
     {
         Direction::iter_clockwise().map(move |dir| f(self.next(dir)))
+    }
+
+    fn filter_map_sides<F, R>(&self, mut f: F) -> impl Iterator<Item = R>
+    where
+        F: FnMut(Option<Self>) -> Option<R>,
+    {
+        Direction::iter_clockwise().filter_map(move |dir| f(self.next(dir)))
     }
 
     // fn check_diagonals<F, R>(&self, mut f: F) -> impl Iterator<Item = Option<R>>

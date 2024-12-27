@@ -84,6 +84,10 @@ impl<T: Default> Grid<T> {
         self.width
     }
 
+    fn in_bounds(&self, pos: Position) -> bool {
+        pos.x < self.len() && pos.y < self.width()
+    }
+
     pub fn cursor(&self, index: Position) -> Cursor<T> {
         Cursor::new(index, self)
     }
@@ -269,7 +273,16 @@ impl<T: Default> Directional for Cursor<T> {
         self.index
             .next(dir)
             .take_if(|next| unsafe { next.x < (*self.grid).len && next.y < (*self.grid).width })
-            .map(|pos| Cursor::new(pos, self.grid))
+            .map(|pos| Self::new(pos, self.grid))
+    }
+
+    fn move_pos(&self, dist: SignedPosition) -> Option<Self> {
+        let new_index = self.index + dist;
+        unsafe {
+            (*self.grid)
+                .in_bounds(new_index)
+                .then(|| Self::new(new_index, self.grid))
+        }
     }
 
     fn error(&self, dir: Direction) -> Self::Err {
@@ -283,7 +296,16 @@ impl<T: Default> Directional for CursorMut<T> {
         self.index
             .next(dir)
             .take_if(|next| unsafe { next.x < (*self.grid).len && next.y < (*self.grid).width })
-            .map(|pos| CursorMut::new(pos, self.grid))
+            .map(|pos| Self::new(pos, self.grid))
+    }
+
+    fn move_pos(&self, dist: SignedPosition) -> Option<Self> {
+        let new_index = self.index + dist;
+        unsafe {
+            (*self.grid)
+                .in_bounds(new_index)
+                .then(|| Self::new(new_index, self.grid))
+        }
     }
 
     fn error(&self, dir: Direction) -> Self::Err {

@@ -332,6 +332,15 @@ impl<T> Directional for Cursor<T> {
             .map(|pos| Cursor::new(pos, self.grid))
     }
 
+    fn move_pos(&self, dist: SignedPosition) -> Option<Self> {
+        let new_index = self.index + dist;
+        unsafe {
+            (*self.grid)
+                .in_bounds(new_index)
+                .then(|| Self::new(new_index, self.grid))
+        }
+    }
+
     fn error(&self, dir: Direction) -> Self::Err {
         E::OutOfBoundsMove(self.index, dir)
     }
@@ -344,6 +353,15 @@ impl<T> Directional for CursorMut<T> {
             .next(dir)
             .take_if(|next| unsafe { next.x < (*self.grid).len() && next.y < (*self.grid).width() })
             .map(|pos| CursorMut::new(pos, self.grid))
+    }
+
+    fn move_pos(&self, dist: SignedPosition) -> Option<Self> {
+        let new_index = self.index + dist;
+        unsafe {
+            (*self.grid)
+                .in_bounds(new_index)
+                .then(|| Self::new(new_index, self.grid))
+        }
     }
 
     fn error(&self, dir: Direction) -> Self::Err {
