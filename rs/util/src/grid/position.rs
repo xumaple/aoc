@@ -18,6 +18,10 @@ impl Position {
     pub fn cardinal_distance(&self, other: &Self) -> usize {
         abs_diff(self.x, other.x) + abs_diff(self.y, other.y)
     }
+
+    pub fn as_signed(&self) -> SignedPosition {
+        (*self).into()
+    }
 }
 
 impl Debug for Position {
@@ -239,6 +243,15 @@ impl From<(isize, isize)> for SignedPosition {
 
 impl From<Position> for SignedPosition {
     fn from(value: Position) -> Self {
+        Self {
+            x: value.x.uinton(),
+            y: value.y.uinton(),
+        }
+    }
+}
+
+impl From<SignedPosition> for Position {
+    fn from(value: SignedPosition) -> Self {
         Self {
             x: value.x.uinton(),
             y: value.y.uinton(),
