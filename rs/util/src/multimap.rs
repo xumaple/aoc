@@ -61,8 +61,17 @@ where
         self
     }
 
-    pub fn get_vals(&mut self, k: K) -> impl Iterator<Item = &V> {
-        self.inner.entry(k).or_default().iter()
+    pub fn get_vals(&self, k: K) -> impl Iterator<Item = &V> {
+        // self.inner.entry(k).or_default().iter()
+        if let Some(v) = self.inner.get(&k) {
+            Iter(Some(v.iter()))
+        } else {
+            Iter(None)
+        }
+    }
+
+    pub fn get_vals_unchecked(&self, k: K) -> impl Iterator<Item = &V> {
+        self.inner[&k].iter()
     }
 }
 
@@ -90,5 +99,15 @@ where
             Some(vals) => vals.contains(&v),
             None => false,
         }
+    }
+}
+
+struct Iter<'a, T: 'a>(Option<std::slice::Iter<'a, T>>);
+
+impl<'a, T: 'a> Iterator for Iter<'a, T> {
+    type Item = &'a T;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.0.as_mut().map(|i| i.next()).flatten()
     }
 }
